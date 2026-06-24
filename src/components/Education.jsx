@@ -20,18 +20,16 @@ export default function Education() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: idx * 0.1, duration: 0.45 }}
-              className="grid grid-cols-1 gap-2 border-b border-line py-8 sm:grid-cols-[200px_1fr_auto] sm:items-center sm:gap-8"
+              className="group grid grid-cols-1 gap-2 border-b border-line py-8 transition-colors hover:bg-white/[0.02] sm:grid-cols-[200px_1fr_auto] sm:items-center sm:gap-8"
             >
-              <span className="numeral-outline text-3xl sm:text-4xl">
+              <span className="numeral-outline text-3xl transition-all group-hover:[-webkit-text-stroke:1.5px_rgba(198,255,61,0.6)] sm:text-4xl">
                 {ed.period.split("–")[0].trim()}
               </span>
               <div>
-                <h3 className="font-display text-xl font-bold sm:text-2xl">
-                  {ed.institute}
-                </h3>
-                <p className="mt-1 text-sm text-inksoft">{ed.degree}</p>
+                <h3 className="font-display text-xl font-bold sm:text-2xl">{ed.institute}</h3>
+                <p className="mt-1 text-sm text-muted">{ed.degree}</p>
               </div>
-              <span className="w-fit rounded-full border border-teal bg-teal/10 px-4 py-1.5 font-mono text-xs font-medium text-teal">
+              <span className="w-fit rounded-full border border-cyan/40 bg-cyan/10 px-4 py-1.5 font-mono text-xs font-medium text-cyan">
                 {ed.score}
               </span>
             </motion.div>

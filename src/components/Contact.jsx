@@ -30,36 +30,33 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-[2rem] border border-ink bg-ink px-6 py-16 text-paper sm:px-12 sm:py-24"
+          className="glass relative overflow-hidden px-6 py-16 text-center sm:px-12 sm:py-24"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(46rem_26rem_at_80%_-20%,rgba(255,77,46,0.30),transparent_60%),radial-gradient(40rem_24rem_at_-10%_120%,rgba(14,140,127,0.26),transparent_60%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_24rem_at_80%_-20%,rgba(198,255,61,0.16),transparent_60%),radial-gradient(36rem_22rem_at_-10%_120%,rgba(46,214,255,0.16),transparent_60%)]" />
 
-          <div className="relative text-center">
-            <span className="eyebrow text-[11px] text-coral">Let&apos;s talk</span>
-            <h2 className="headline mx-auto mt-6 max-w-3xl text-[13vw] leading-[0.9] sm:text-7xl lg:text-8xl">
+          <div className="relative">
+            <span className="eyebrow text-[11px] text-lime">// let&apos;s_talk</span>
+            <h2 className="headline mx-auto mt-6 max-w-3xl text-[12vw] leading-[0.9] sm:text-7xl lg:text-8xl">
               Let&apos;s build
               <br />
-              something{" "}
-              <span className="serif-italic font-normal text-coral">together</span>.
+              something <span className="text-lime glow-text">together</span>.
             </h2>
-            <p className="mx-auto mt-7 max-w-xl text-sm leading-relaxed text-paper/65 sm:text-base">
+            <p className="mx-auto mt-7 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
               Working on something interesting — APIs, infra, or a product that needs
               an AI brain? Internships, short-term gigs, or full-time roles are all
               welcome.
             </p>
 
-            {/* email button */}
             <button
               onClick={copyEmail}
-              className="group mx-auto mt-10 inline-flex items-center gap-3 rounded-full border border-paper/20 bg-paper/[0.04] py-3 pl-6 pr-3 text-base font-medium backdrop-blur transition hover:border-coral/60"
+              className="group mx-auto mt-10 inline-flex items-center gap-3 rounded-full border border-line bg-white/[0.03] py-3 pl-6 pr-3 text-base font-medium backdrop-blur transition hover:border-lime/50"
             >
               <span className="font-mono text-sm sm:text-base">{EMAIL}</span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-coral text-white transition group-hover:scale-105">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-lime text-base shadow-glow-lime transition group-hover:scale-105">
                 {copied ? <Check className="h-4 w-4" /> : <Mail className="h-4 w-4" />}
               </span>
             </button>
 
-            {/* socials */}
             <div className="mt-8 flex items-center justify-center gap-3">
               {LINKS.map(({ label, href, icon: Icon }) => (
                 <a
@@ -67,7 +64,7 @@ export default function Contact() {
                   href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-paper/20 bg-paper/[0.04] px-4 py-2 text-sm transition hover:border-coral/60 hover:text-coral"
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-white/[0.03] px-4 py-2 text-sm transition hover:border-lime/50 hover:text-lime"
                 >
                   <Icon className="h-4 w-4" /> {label}
                   <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />

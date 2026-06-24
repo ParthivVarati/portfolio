@@ -1,55 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --paper: #F2ECE0;
-  --paper-2: #EBE2D2;
-  --card: #FBF8F1;
-  --ink: #1B1A17;
-  --ink-soft: #5E574C;
-  --line: #DCD2C0;
-  --coral: #FF4D2E;
-  --teal: #0E8C7F;
-  --ocean: #0A1A2A;
+  --base: #08090B;
+  --base-2: #0E1116;
+  --panel: #10141B;
+  --text: #E9ECF1;
+  --muted: #878D99;
+  --line: rgba(255, 255, 255, 0.09);
+  --lime: #C6FF3D;
+  --cyan: #2ED6FF;
+  --violet: #8B5CF6;
   /* legacy aliases */
-  --primary: #FF4D2E;
-  --accent: #0E8C7F;
+  --primary: #C6FF3D;
+  --accent: #2ED6FF;
 }
 
 html, body, #root { height: 100%; }
 html { scroll-behavior: smooth; }
 
 body {
-  @apply bg-paper text-ink font-body leading-relaxed antialiased;
-  /* faint paper grain via layered radial dots */
+  @apply bg-base text-text font-body leading-relaxed antialiased;
+  /* faint tech grid */
   background-image:
-    radial-gradient(rgba(27, 26, 23, 0.035) 1px, transparent 1px);
-  background-size: 22px 22px;
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
 ::selection {
-  background: var(--coral);
-  color: #fff;
+  background: var(--lime);
+  color: #08090B;
 }
 
-/* ---- Reusable display helpers ---- */
+/* ---- Display helpers ---- */
 .display {
   font-family: 'Space Grotesk', sans-serif;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
-.serif-italic {
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-}
-
-/* Giant fluid headline */
 .headline {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
@@ -58,15 +51,53 @@ body {
   text-wrap: balance;
 }
 
+.eyebrow {
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.glow-text {
+  text-shadow: 0 0 24px rgba(198, 255, 61, 0.45);
+}
+
 /* Outlined "watermark" number */
 .numeral-outline {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(27, 26, 23, 0.18);
+  -webkit-text-stroke: 1.5px rgba(233, 236, 241, 0.22);
 }
 
-/* Editorial index row (projects / experience lists) */
+/* ---- Glass surfaces ---- */
+.glass {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 24px 70px -34px rgba(0, 0, 0, 0.85);
+}
+
+/* ---- Buttons ---- */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-lime px-5 py-2.5 text-sm font-semibold text-base transition;
+  box-shadow: 0 12px 44px -10px rgba(198, 255, 61, 0.5);
+}
+.btn-primary:hover { @apply -translate-y-0.5; filter: brightness(1.06); }
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-line bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-text transition;
+}
+.btn-ghost:hover { @apply -translate-y-0.5 border-white/25 bg-white/[0.07]; }
+
+/* small tag pill */
+.chip {
+  @apply inline-flex items-center rounded-full border border-line bg-white/[0.03] px-3 py-1 text-xs text-muted;
+}
+
+/* Editorial index row — fills with lime on hover */
 .index-row {
   position: relative;
   transition: color 0.35s ease;
@@ -75,10 +106,10 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--ink);
+  background: var(--lime);
   transform: scaleY(0);
   transform-origin: bottom;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 0;
 }
 .index-row:hover::before { transform: scaleY(1); }
@@ -90,9 +121,16 @@ body {
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 
-/* fine paper grain overlay */
+/* fine grain overlay */
 .grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* respect reduced motion */
@@ -105,52 +143,7 @@ body {
   }
 }
 
-.eyebrow {
-  font-family: 'Space Mono', monospace;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-/* Paper card with a crisp ink hairline */
-.paper-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 0 rgba(27, 26, 23, 0.03), 0 18px 40px -28px rgba(27, 26, 23, 0.45);
-}
-
-/* Coral underline accent for inline emphasis */
-.ink-underline {
-  background-image: linear-gradient(transparent 62%, rgba(255, 77, 46, 0.32) 62%);
-  background-size: 100% 100%;
-}
-
-/* Buttons */
-.btn-coral {
-  @apply inline-flex items-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-semibold text-white transition;
-  box-shadow: 0 14px 34px -12px rgba(255, 77, 46, 0.55);
-}
-.btn-coral:hover { @apply -translate-y-0.5 bg-coraldeep; }
-
-.btn-ghost {
-  @apply inline-flex items-center gap-2 rounded-full border border-ink/25 bg-transparent px-5 py-2.5 text-sm font-semibold text-ink transition;
-}
-.btn-ghost:hover { @apply -translate-y-0.5 border-ink bg-ink/[0.04]; }
-
-/* Small bordered tag pill */
-.chip {
-  @apply inline-flex items-center rounded-full border border-line bg-paper px-3 py-1 text-xs text-inksoft;
-}
-
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--coral);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* Thin scrollbar to match paper theme */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--paper); }
-::-webkit-scrollbar-thumb { background: #cbbfa9; border-radius: 999px; border: 2px solid var(--paper); }
-::-webkit-scrollbar-thumb:hover { background: #b8aa90; }
+::-webkit-scrollbar-track { background: #08090B; }
+::-webkit-scrollbar-thumb { background: #23262d; border-radius: 999px; border: 2px solid #08090B; }
+::-webkit-scrollbar-thumb:hover { background: #31353d; }

@@ -15,7 +15,7 @@ export default function SectionHeading({ index, title, subtitle }) {
             {index}
           </span>
           <div>
-            <span className="eyebrow text-[11px] text-coral">Section {index}</span>
+            <span className="eyebrow text-[11px] text-lime">// section_{index}</span>
             <h2 className="headline mt-2 text-4xl sm:text-5xl">{title}</h2>
           </div>
         </div>

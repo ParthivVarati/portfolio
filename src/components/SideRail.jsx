@@ -26,8 +26,8 @@ export default function SideRail({ activeSection }) {
             <span
               className={`font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300 ${
                 active
-                  ? "translate-x-0 text-ink opacity-100"
-                  : "translate-x-2 text-inksoft opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                  ? "translate-x-0 text-text opacity-100"
+                  : "translate-x-2 text-muted opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
               }`}
             >
               {label}
@@ -35,8 +35,8 @@ export default function SideRail({ activeSection }) {
             <span
               className={`block rounded-full transition-all duration-300 ${
                 active
-                  ? "h-2.5 w-2.5 bg-coral"
-                  : "h-2 w-2 bg-ink/25 group-hover:bg-ink/50"
+                  ? "h-2.5 w-2.5 bg-lime shadow-glow-lime"
+                  : "h-2 w-2 bg-white/25 group-hover:bg-white/50"
               }`}
             />
           </button>

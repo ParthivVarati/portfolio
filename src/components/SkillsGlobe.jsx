@@ -4,11 +4,11 @@ import { OrbitControls, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { skills } from "../data/skillsData";
 
-// Theme palette — coral primary, teal secondary, ink for creative
+// Theme palette — neon lime primary, cyan secondary, violet accent
 const THEME = {
-  tech: ["#FF4D2E", "#0E8C7F"], // alternate coral / teal
-  soft: ["#0E8C7F", "#FF4D2E"],
-  creative: ["#1B1A17", "#FF4D2E"]
+  tech: ["#C6FF3D", "#2ED6FF"], // alternate lime / cyan
+  soft: ["#2ED6FF", "#C6FF3D"],
+  creative: ["#8B5CF6", "#C6FF3D"]
 };
 
 function latLonToVector3(lat, lon, radius) {
@@ -66,16 +66,16 @@ function GlobeModel({ category }) {
 
   return (
     <group ref={globeRef}>
-      {/* faint shaded core gives the sphere volume */}
+      {/* faint glowing core gives the sphere volume */}
       <mesh>
         <sphereGeometry args={[1.49, 48, 48]} />
-        <meshBasicMaterial color="#1B1A17" transparent opacity={0.035} />
+        <meshBasicMaterial color="#2ED6FF" transparent opacity={0.04} />
       </mesh>
 
       {/* wireframe shell */}
       <mesh>
         <sphereGeometry args={[1.5, 36, 36]} />
-        <meshBasicMaterial wireframe color="#1B1A17" transparent opacity={0.12} />
+        <meshBasicMaterial wireframe color="#E9ECF1" transparent opacity={0.1} />
       </mesh>
 
       {nodes.map((n, i) => (
@@ -95,7 +95,7 @@ function GlobeModel({ category }) {
             <span
               ref={(el) => (labelRefs.current[i] = el)}
               className="whitespace-nowrap text-[11px] font-semibold tracking-tight"
-              style={{ color: "#1B1A17", opacity: 0, willChange: "opacity, transform" }}
+              style={{ color: "#E9ECF1", opacity: 0, willChange: "opacity, transform" }}
             >
               {n.name}
             </span>

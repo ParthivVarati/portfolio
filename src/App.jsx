@@ -32,9 +32,7 @@ export default function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) {
           const id = visible[0].target.id;
-          if (SECTION_IDS.includes(id)) {
-            setActiveSection(id);
-          }
+          if (SECTION_IDS.includes(id)) setActiveSection(id);
         }
       },
       { threshold: [0.2, 0.4, 0.6] }
@@ -49,11 +47,11 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-paper text-ink">
-      {/* Soft warm wash anchored to the corners, very subtle */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgba(255,77,46,0.10),transparent_60%),radial-gradient(50rem_36rem_at_-10%_110%,rgba(14,140,127,0.10),transparent_60%)]" />
-      {/* fine paper grain */}
-      <div className="grain pointer-events-none fixed inset-0 -z-10 opacity-[0.05] mix-blend-multiply" />
+    <div className="relative min-h-screen overflow-x-hidden bg-base text-text">
+      {/* ambient neon glows */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(50rem_34rem_at_82%_-8%,rgba(198,255,61,0.10),transparent_60%),radial-gradient(46rem_32rem_at_-8%_18%,rgba(46,214,255,0.10),transparent_60%),radial-gradient(50rem_40rem_at_50%_120%,rgba(139,92,246,0.10),transparent_60%)]" />
+      {/* fine grain */}
+      <div className="grain pointer-events-none fixed inset-0 -z-10 opacity-[0.06] mix-blend-overlay" />
 
       <ScrollProgress />
       <Navbar activeSection={activeSection} />

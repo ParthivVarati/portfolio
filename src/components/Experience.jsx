@@ -60,7 +60,7 @@ export default function Experience() {
         />
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[5fr_7fr] lg:gap-14">
-          {/* Company selector — large type */}
+          {/* Company selector */}
           <div className="flex flex-col">
             {experiences.map((exp, idx) => {
               const on = active === idx;
@@ -72,21 +72,21 @@ export default function Experience() {
                 >
                   <div className="flex items-center gap-4">
                     <span
-                      className={`h-2.5 w-2.5 shrink-0 rounded-full transition-colors ${
-                        on ? "bg-coral" : "bg-ink/20 group-hover:bg-ink/40"
+                      className={`h-2.5 w-2.5 shrink-0 rounded-full transition-all ${
+                        on ? "bg-lime shadow-glow-lime" : "bg-white/20 group-hover:bg-white/40"
                       }`}
                     />
                     <h3
                       className={`headline text-3xl transition-colors sm:text-4xl ${
-                        on ? "text-ink" : "text-ink/35 group-hover:text-ink/70"
+                        on ? "text-text" : "text-text/30 group-hover:text-text/60"
                       }`}
                     >
                       {exp.company}
                     </h3>
                   </div>
-                  <div className="mt-2 flex items-center gap-3 pl-6 font-mono text-xs text-inksoft">
+                  <div className="mt-2 flex items-center gap-3 pl-6 font-mono text-xs text-muted">
                     <span>{exp.role}</span>
-                    <span className="text-line">/</span>
+                    <span className="text-white/20">/</span>
                     <span>{exp.duration}</span>
                   </div>
                 </button>
@@ -102,14 +102,14 @@ export default function Experience() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="paper-card p-7 sm:p-9"
+              className="glass p-7 sm:p-9"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h4 className="font-display text-2xl font-bold">
-                    {data.role} <span className="text-coral">@ {data.company}</span>
+                    {data.role} <span className="text-lime">@ {data.company}</span>
                   </h4>
-                  <div className="mt-3 flex flex-wrap gap-4 text-sm text-inksoft">
+                  <div className="mt-3 flex flex-wrap gap-4 font-mono text-sm text-muted">
                     <span className="flex items-center gap-1.5">
                       <CalendarDays size={15} /> {data.duration}
                     </span>
@@ -119,10 +119,10 @@ export default function Experience() {
                   </div>
                 </div>
                 <span
-                  className={`shrink-0 rounded-full border px-3.5 py-1 text-xs font-medium ${
+                  className={`shrink-0 rounded-full border px-3.5 py-1 font-mono text-xs ${
                     data.status === "Current"
-                      ? "border-teal bg-teal/10 text-teal"
-                      : "border-line text-inksoft"
+                      ? "border-lime/40 bg-lime/10 text-lime"
+                      : "border-line text-muted"
                   }`}
                 >
                   {data.status}
@@ -131,13 +131,11 @@ export default function Experience() {
 
               <ul className="mt-7 space-y-3.5">
                 {data.points.map((p, i) => (
-                  <li key={i} className="flex gap-3 text-[15px] text-ink/85">
-                    <ArrowRight size={17} className="mt-1 shrink-0 text-coral" />
+                  <li key={i} className="flex gap-3 text-[15px] text-text/85">
+                    <ArrowRight size={17} className="mt-1 shrink-0 text-lime" />
                     <span>
                       {p.text}
-                      {p.highlight && (
-                        <span className="font-semibold text-teal">{p.highlight}</span>
-                      )}
+                      {p.highlight && <span className="font-semibold text-cyan">{p.highlight}</span>}
                     </span>
                   </li>
                 ))}
@@ -145,9 +143,7 @@ export default function Experience() {
 
               <div className="mt-7 flex flex-wrap gap-2">
                 {data.skills.map((skill) => (
-                  <span key={skill} className="chip">
-                    {skill}
-                  </span>
+                  <span key={skill} className="chip">{skill}</span>
                 ))}
               </div>
             </motion.div>

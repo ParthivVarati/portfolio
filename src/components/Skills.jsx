@@ -42,15 +42,13 @@ export default function Skills() {
         />
 
         {/* Tabs */}
-        <div className="mb-10 inline-flex rounded-full border border-line bg-card p-1">
+        <div className="mb-10 inline-flex rounded-full border border-line bg-white/[0.03] p-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
               className={`rounded-full px-5 py-2 text-sm font-medium transition ${
-                active === tab.id
-                  ? "bg-ink text-paper"
-                  : "text-inksoft hover:text-ink"
+                active === tab.id ? "bg-lime text-base" : "text-muted hover:text-text"
               }`}
             >
               {tab.label}
@@ -59,17 +57,14 @@ export default function Skills() {
         </div>
 
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
-          {/* Paper panel hosting the globe */}
-          <div className="paper-card relative flex flex-col overflow-hidden">
-            {/* subtle coral / teal wash */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(34rem_20rem_at_50%_0%,rgba(255,77,46,0.08),transparent_60%),radial-gradient(28rem_18rem_at_70%_110%,rgba(14,140,127,0.09),transparent_60%)]" />
+          {/* Globe void panel */}
+          <div className="relative flex flex-col overflow-hidden rounded-[1.25rem] border border-line bg-base2">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(30rem_20rem_at_50%_30%,rgba(198,255,61,0.12),transparent_60%),radial-gradient(26rem_18rem_at_70%_110%,rgba(46,214,255,0.12),transparent_60%)]" />
 
             <div className="relative z-10 flex items-center justify-between px-5 pt-5">
-              <span className="eyebrow text-[10px] text-inksoft">
-                {active} · skill map
-              </span>
-              <span className="flex items-center gap-2 font-mono text-[10px] text-inksoft">
-                <span className="h-1.5 w-1.5 rounded-full bg-coral" /> drag to explore
+              <span className="eyebrow text-[10px] text-muted">{active}_skill.map</span>
+              <span className="flex items-center gap-2 font-mono text-[10px] text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-lime shadow-glow-lime" /> drag to explore
               </span>
             </div>
 
@@ -83,13 +78,11 @@ export default function Skills() {
           {/* Content list */}
           <div className="space-y-4">
             {Object.entries(content[active]).map(([title, items]) => (
-              <div key={title} className="paper-card p-5">
-                <h4 className="eyebrow mb-3 text-[11px] text-coral">{title}</h4>
+              <div key={title} className="glass p-5">
+                <h4 className="eyebrow mb-3 text-[11px] text-lime">{title}</h4>
                 <div className="flex flex-wrap gap-2">
                   {items.map((item) => (
-                    <span key={item} className="chip">
-                      {item}
-                    </span>
+                    <span key={item} className="chip">{item}</span>
                   ))}
                 </div>
               </div>
