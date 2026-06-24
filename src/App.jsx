@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import SideRail from "./components/SideRail";
+import ScrollProgress from "./components/ScrollProgress";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Experience from "./components/Experience";
@@ -51,7 +52,10 @@ export default function App() {
     <div className="relative min-h-screen overflow-x-hidden bg-paper text-ink">
       {/* Soft warm wash anchored to the corners, very subtle */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgba(255,77,46,0.10),transparent_60%),radial-gradient(50rem_36rem_at_-10%_110%,rgba(14,140,127,0.10),transparent_60%)]" />
+      {/* fine paper grain */}
+      <div className="grain pointer-events-none fixed inset-0 -z-10 opacity-[0.05] mix-blend-multiply" />
 
+      <ScrollProgress />
       <Navbar activeSection={activeSection} />
       <SideRail activeSection={activeSection} />
 

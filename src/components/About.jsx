@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Sparkles, Cpu, Mail, GraduationCap } from "lucide-react";
+import Counter from "./Counter";
 
 const fade = {
   hidden: { opacity: 0, y: 22 },
@@ -45,12 +46,19 @@ export default function About() {
           </Cell>
 
           <Cell i={1}>
-            <p className="numeral-outline text-5xl sm:text-6xl">8.57</p>
+            <p className="numeral-outline text-5xl sm:text-6xl">
+              <Counter value={8.57} format={(v) => v.toFixed(2)} />
+            </p>
             <p className="mt-3 text-sm text-inksoft">CGPA, B.Tech CSE</p>
           </Cell>
 
           <Cell i={2}>
-            <p className="font-display text-5xl font-bold text-coral sm:text-6xl">1k+</p>
+            <p className="font-display text-5xl font-bold text-coral sm:text-6xl">
+              <Counter
+                value={1000}
+                format={(v) => (v >= 1000 ? "1k+" : `${(v / 1000).toFixed(1)}k`)}
+              />
+            </p>
             <p className="mt-3 text-sm text-inksoft">Emails/day via async pipelines</p>
           </Cell>
 
@@ -58,7 +66,9 @@ export default function About() {
             <Cpu className="h-5 w-5 text-teal" />
             <p className="mt-4 font-display text-lg font-semibold">
               Multi-turn context handling improved{" "}
-              <span className="text-teal">30%</span>
+              <span className="text-teal">
+                <Counter value={30} format={(v) => `${Math.round(v)}%`} />
+              </span>
             </p>
             <p className="mt-2 text-sm text-inksoft">RAG + Letta memory at Nimoy AI.</p>
           </Cell>

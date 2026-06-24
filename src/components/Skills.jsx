@@ -60,15 +60,20 @@ export default function Skills() {
 
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
           {/* Paper panel hosting the globe */}
-          <div className="paper-card relative flex items-center justify-center overflow-hidden">
+          <div className="paper-card relative flex flex-col overflow-hidden">
             {/* subtle coral / teal wash */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(34rem_20rem_at_50%_0%,rgba(255,77,46,0.07),transparent_60%),radial-gradient(28rem_18rem_at_70%_110%,rgba(14,140,127,0.08),transparent_60%)]" />
-            <div className="absolute left-5 top-5 z-10">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(34rem_20rem_at_50%_0%,rgba(255,77,46,0.08),transparent_60%),radial-gradient(28rem_18rem_at_70%_110%,rgba(14,140,127,0.09),transparent_60%)]" />
+
+            <div className="relative z-10 flex items-center justify-between px-5 pt-5">
               <span className="eyebrow text-[10px] text-inksoft">
-                interactive · drag to spin
+                {active} · skill map
+              </span>
+              <span className="flex items-center gap-2 font-mono text-[10px] text-inksoft">
+                <span className="h-1.5 w-1.5 rounded-full bg-coral" /> drag to explore
               </span>
             </div>
-            <div className="relative w-full">
+
+            <div className="relative flex flex-1 items-center">
               <GlobeErrorBoundary>
                 <SkillsGlobe category={active} />
               </GlobeErrorBoundary>

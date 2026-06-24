@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowDownRight, Download } from "lucide-react";
+
+const rise = {
+  hidden: { opacity: 0, y: 26 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.12 + i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+  })
+};
 
 const PHRASES = ["RAG & LLM agents.", "Computer-vision models.", "Async data pipelines."];
 const MARQUEE = [
@@ -60,24 +70,42 @@ export default function Hero() {
         {/* headline + meta */}
         <div className="grid grid-cols-1 gap-10 pt-10 lg:grid-cols-[1fr_240px] lg:gap-12 lg:pt-14">
           <div>
-            <h1 className="headline text-[15vw] leading-[0.88] sm:text-[12vw] lg:text-[8.2rem]">
+            <motion.h1
+              variants={rise}
+              custom={0}
+              initial="hidden"
+              animate="visible"
+              className="headline text-[15vw] leading-[0.88] sm:text-[12vw] lg:text-[8.2rem]"
+            >
               I build
               <br />
               <span className="serif-italic font-normal text-coral">secure</span>{" "}
               AI&nbsp;&amp;&nbsp;ML
               <br />
               systems<span className="text-coral">.</span>
-            </h1>
+            </motion.h1>
 
-            <p className="mt-8 font-mono text-base text-inksoft sm:text-lg">
+            <motion.p
+              variants={rise}
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              className="mt-8 font-mono text-base text-inksoft sm:text-lg"
+            >
               <span className="text-teal">~/</span> currently shipping{" "}
               <span className="text-ink">{typing}</span>
               <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] animate-blink bg-ink" />
-            </p>
+            </motion.p>
           </div>
 
           {/* magazine masthead column */}
-          <aside className="flex flex-col gap-6 lg:border-l lg:border-line lg:pl-8">
+          <motion.aside
+            variants={rise}
+            custom={2}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-6 lg:border-l lg:border-line lg:pl-8"
+          >
             <div>
               <p className="eyebrow text-[10px] text-inksoft">Role</p>
               <p className="mt-1 font-display text-sm font-semibold">
@@ -112,13 +140,13 @@ export default function Hero() {
                 <Download className="h-4 w-4" /> Résumé
               </a>
             </div>
-          </aside>
+          </motion.aside>
         </div>
       </div>
 
       {/* marquee band */}
-      <div className="mt-14 overflow-hidden border-y border-line bg-ink py-4 lg:mt-20">
-        <div className="mask-x flex w-max animate-marquee gap-8 whitespace-nowrap">
+      <div className="group mt-14 overflow-hidden border-y border-line bg-ink py-4 lg:mt-20">
+        <div className="mask-x flex w-max animate-marquee gap-8 whitespace-nowrap group-hover:[animation-play-state:paused]">
           {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
             <span
               key={i}
