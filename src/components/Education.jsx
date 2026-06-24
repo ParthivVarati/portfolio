@@ -1,36 +1,40 @@
 import { motion } from "framer-motion";
+import { GraduationCap } from "lucide-react";
 import { education } from "../data/education";
+import SectionHeading from "./SectionHeading";
 
 export default function Education() {
   return (
-    <section id="education" className="py-20">
-      <div className="mx-auto max-w-5xl px-4">
-        <header className="mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-            Education
-          </h2>
-          <p className="mt-2 text-sm text-slate-300">
-            Formal learning that shaped how I think about systems.
-          </p>
-        </header>
+    <section id="education" className="py-24 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionHeading
+          index="04"
+          title="Education"
+          subtitle="Formal learning that shaped how I think about systems."
+        />
 
-        <div className="grid gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {education.map((ed, idx) => (
             <motion.article
               key={idx}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: idx * 0.15 }}
-              className="rounded-xl border border-slate-800 bg-slate-900/70 p-4 shadow-md shadow-slate-950/70"
+              transition={{ delay: idx * 0.12, duration: 0.4 }}
+              className="paper-card flex items-start gap-4 p-6"
             >
-              <h3 className="text-sm md:text-base font-semibold text-slate-50">
-                {ed.institute}
-              </h3>
-              <p className="text-xs md:text-sm text-slate-300">{ed.degree}</p>
-              <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
-                <span>{ed.period}</span>
-                <span className="font-mono">{ed.score}</span>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-paper text-coral">
+                <GraduationCap className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-display text-base font-bold">{ed.institute}</h3>
+                <p className="mt-0.5 text-sm text-inksoft">{ed.degree}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-inksoft">
+                  <span className="font-mono">{ed.period}</span>
+                  <span className="rounded-full bg-teal/10 px-2.5 py-0.5 font-medium text-teal">
+                    {ed.score}
+                  </span>
+                </div>
               </div>
             </motion.article>
           ))}

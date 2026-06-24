@@ -5,7 +5,6 @@ import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Education from "./components/Education";
-import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -15,7 +14,6 @@ const SECTION_IDS = [
   "projects",
   "skills",
   "education",
-  "certifications",
   "contact"
 ];
 
@@ -35,9 +33,7 @@ export default function App() {
           }
         }
       },
-      {
-        threshold: [0.3, 0.5, 0.75]
-      }
+      { threshold: [0.3, 0.5, 0.75] }
     );
 
     SECTION_IDS.forEach((id) => {
@@ -49,13 +45,13 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-slate-950 text-slate-100">
-      {/* Background gradient overlay */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),transparent_60%),radial-gradient(circle_at_bottom,_rgba(168,85,247,0.2),transparent_60%)]" />
+    <div className="relative min-h-screen bg-paper text-ink">
+      {/* Soft warm wash anchored to the corners, very subtle */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgba(255,77,46,0.10),transparent_60%),radial-gradient(50rem_36rem_at_-10%_110%,rgba(14,140,127,0.10),transparent_60%)]" />
 
       <Navbar activeSection={activeSection} />
 
-      <main className="pt-16 space-y-0">
+      <main>
         <Hero />
         <Experience />
         <Projects />

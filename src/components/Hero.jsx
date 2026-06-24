@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowRight, Download } from "lucide-react";
+
+const PHRASES = ["AI / ML pipelines.", "Full-stack applications.", "RAG & LLM systems."];
+const MARQUEE = [
+  "Python", "LangChain", "RAG", "PyTorch", "YOLOv8", "React",
+  "Docker", "RabbitMQ", "Celery", "Hugging Face", "LangGraph", "OpenCV"
+];
 
 export default function Hero() {
   const [pct, setPct] = useState(0);
-  const phrases = ["AI/ML Pipelines.", "Full Stack Applications.", "RAG & LLM Systems."];
   const [typing, setTyping] = useState("");
 
+  // boot counter
   useEffect(() => {
     let start = null;
     function step(ts) {
@@ -19,32 +24,33 @@ export default function Hero() {
     requestAnimationFrame(step);
   }, []);
 
+  // typewriter
   useEffect(() => {
     if (pct < 100) return;
     let idx = 0;
     let char = 0;
 
     const run = () => {
-      const current = phrases[idx];
+      const current = PHRASES[idx];
       if (char <= current.length) {
         setTyping(current.slice(0, char));
         char++;
-        setTimeout(run, 40);
+        setTimeout(run, 45);
       } else {
         setTimeout(() => {
           const del = () => {
             if (char >= 0) {
               setTyping(current.slice(0, char));
               char--;
-              setTimeout(del, 18);
+              setTimeout(del, 20);
             } else {
-              idx = (idx + 1) % phrases.length;
+              idx = (idx + 1) % PHRASES.length;
               char = 0;
               run();
             }
           };
           del();
-        }, 1200);
+        }, 1300);
       }
     };
     run();
@@ -54,101 +60,78 @@ export default function Hero() {
     document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section
-      id="home"
-      className="relative min-h-[86vh] flex items-center justify-center overflow-hidden"
-    >
-      {/* Background blobs */}
-      <svg
-        className="absolute -top-40 -left-40 opacity-30 w-[36rem] h-[36rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0" stopColor="#00C2FF" stopOpacity="0.24" />
-            <stop offset="1" stopColor="#7C3AED" stopOpacity="0.24" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g1)"
-          />
-        </g>
-      </svg>
-
-      <svg
-        className="absolute -bottom-44 -right-40 opacity-28 w-[42rem] h-[42rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g2" x1="0" x2="1">
-            <stop offset="0" stopColor="#7C3AED" stopOpacity="0.18" />
-            <stop offset="1" stopColor="#00C2FF" stopOpacity="0.18" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g2)"
-          />
-        </g>
-      </svg>
-
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 text-center">
-        <div className="inline-flex items-center gap-3 mb-6 justify-center">
-          <div className="w-3 h-3 rounded-full bg-[var(--primary)] animate-pulse" />
-          <div className="text-xs font-mono text-slate-300 glass-card px-3 py-1 rounded-full">
+    <section id="home" className="relative overflow-hidden pt-28 sm:pt-32">
+      <div className="mx-auto max-w-6xl px-5">
+        {/* status eyebrow */}
+        <div className="flex items-center gap-3">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-coral/60" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-coral" />
+          </span>
+          <span className="eyebrow text-[11px] text-inksoft">
             {pct < 100
-              ? `Loading your experience… ${String(pct).padStart(3, "0")}%`
-              : "Experience ready"}
-          </div>
+              ? `booting portfolio · ${String(pct).padStart(3, "0")}%`
+              : "open to opportunities · 2026"}
+          </span>
         </div>
 
-        <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-          <span className="block">I build secure, reliable</span>
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] block">
-            AI and ML systems.
-          </span>
+        {/* headline */}
+        <h1 className="display mt-7 text-[2.6rem] font-bold leading-[1.04] sm:text-6xl md:text-7xl">
+          I build secure, reliable
+          <br />
+          <span className="text-coral">AI &amp; ML systems</span>
+          <span className="text-ink">.</span>
         </h1>
 
-        <div className="h-9 md:h-12">
-          <div className="text-lg sm:text-xl text-slate-300">
-            {typing || "\u00a0"}
-          </div>
+        {/* typewriter line */}
+        <div className="mt-5 h-8 sm:h-9">
+          <p className="font-mono text-base text-inksoft sm:text-lg">
+            <span className="text-teal">&gt;</span> {typing}
+            <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[2px] animate-blink bg-ink" />
+          </p>
         </div>
 
-        <p className="max-w-2xl mx-auto mt-4 text-sm md:text-base text-slate-300">
-          Hi, I'm{" "}
-          <span className="font-semibold text-slate-100">
+        {/* intro */}
+        <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-inksoft sm:text-base">
+          Hi, I&apos;m{" "}
+          <span className="font-semibold text-ink ink-underline">
             Naga Parthiv Varma Varati
           </span>
-          , a Computer Science Graduate.
+          , a Computer Science graduate engineering RAG agents, vision models, and
+          async pipelines that hold up in production.
         </p>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <button
-            onClick={goExp}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] px-5 py-2.5 text-sm font-medium text-slate-900 shadow-soft-glow hover:-translate-y-0.5 transition"
-          >
-            View Experience <ArrowRight className="h-4 w-4" />
+        {/* CTAs */}
+        <div className="mt-9 flex flex-wrap items-center gap-3">
+          <button onClick={goExp} className="btn-coral">
+            View experience <ArrowRight className="h-4 w-4" />
           </button>
-
-          {/* Resume Button */}
           <a
             href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-card px-4 py-2 text-sm font-medium text-slate-100 hover:border-primary hover:text-primary transition"
+            className="btn-ghost"
           >
-            <Download className="h-4 w-4 animate-bounce" />
-            Resume
+            <Download className="h-4 w-4" />
+            Résumé
           </a>
+        </div>
+      </div>
+
+      {/* marquee band */}
+      <div className="mt-16 overflow-hidden border-y border-line bg-paper2/70 py-3.5 sm:mt-20">
+        <div className="flex w-max animate-marquee gap-10 whitespace-nowrap">
+          {[...MARQUEE, ...MARQUEE].map((item, i) => (
+            <span
+              key={i}
+              className="flex items-center gap-10 font-mono text-sm text-inksoft"
+            >
+              {item}
+              <span className="text-coral">✳</span>
+            </span>
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
-
-
