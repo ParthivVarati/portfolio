@@ -1,154 +1,163 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowDownRight, Download } from "lucide-react";
+
+const rise = {
+  hidden: { opacity: 0, y: 26 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.12 + i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+  })
+};
+
+const PHRASES = ["RAG & LLM agents.", "Computer-vision models.", "Async data pipelines."];
+const MARQUEE = [
+  "Python", "LangChain", "RAG", "PyTorch", "YOLOv8", "React",
+  "Docker", "RabbitMQ", "Celery", "Hugging Face", "LangGraph", "OpenCV"
+];
 
 export default function Hero() {
-  const [pct, setPct] = useState(0);
-  const phrases = ["AI/ML Pipelines.", "Full Stack Applications.", "RAG & LLM Systems."];
   const [typing, setTyping] = useState("");
 
   useEffect(() => {
-    let start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      const t = (ts - start) / 900;
-      const eased = Math.min(100, Math.round(100 * (1 - Math.pow(1 - t, 1.8))));
-      setPct(eased);
-      if (eased < 100) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }, []);
-
-  useEffect(() => {
-    if (pct < 100) return;
     let idx = 0;
     let char = 0;
-
+    let timer;
     const run = () => {
-      const current = phrases[idx];
+      const current = PHRASES[idx];
       if (char <= current.length) {
         setTyping(current.slice(0, char));
         char++;
-        setTimeout(run, 40);
+        timer = setTimeout(run, 48);
       } else {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           const del = () => {
             if (char >= 0) {
               setTyping(current.slice(0, char));
               char--;
-              setTimeout(del, 18);
+              timer = setTimeout(del, 22);
             } else {
-              idx = (idx + 1) % phrases.length;
+              idx = (idx + 1) % PHRASES.length;
               char = 0;
               run();
             }
           };
           del();
-        }, 1200);
+        }, 1400);
       }
     };
     run();
-  }, [pct]);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const goExp = () =>
-    document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section
-      id="home"
-      className="relative min-h-[86vh] flex items-center justify-center overflow-hidden"
-    >
-      {/* Background blobs */}
-      <svg
-        className="absolute -top-40 -left-40 opacity-30 w-[36rem] h-[36rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0" stopColor="#00C2FF" stopOpacity="0.24" />
-            <stop offset="1" stopColor="#7C3AED" stopOpacity="0.24" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g1)"
-          />
-        </g>
-      </svg>
-
-      <svg
-        className="absolute -bottom-44 -right-40 opacity-28 w-[42rem] h-[42rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g2" x1="0" x2="1">
-            <stop offset="0" stopColor="#7C3AED" stopOpacity="0.18" />
-            <stop offset="1" stopColor="#00C2FF" stopOpacity="0.18" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g2)"
-          />
-        </g>
-      </svg>
-
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 text-center">
-        <div className="inline-flex items-center gap-3 mb-6 justify-center">
-          <div className="w-3 h-3 rounded-full bg-[var(--primary)] animate-pulse" />
-          <div className="text-xs font-mono text-slate-300 glass-card px-3 py-1 rounded-full">
-            {pct < 100
-              ? `Loading your experience… ${String(pct).padStart(3, "0")}%`
-              : "Experience ready"}
-          </div>
+    <section id="home" className="relative flex min-h-screen flex-col justify-center overflow-hidden pt-24">
+      <div className="mx-auto w-full max-w-6xl px-5">
+        {/* masthead top rule */}
+        <div className="flex items-center justify-between border-b border-line pb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-inksoft">
+          <span>Portfolio — 2026</span>
+          <span className="hidden sm:inline">Naga Parthiv Varma Varati</span>
+          <span className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-teal" />
+            Open to work
+          </span>
         </div>
 
-        <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-          <span className="block">I build secure, reliable</span>
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] block">
-            AI and ML systems.
-          </span>
-        </h1>
+        {/* headline + meta */}
+        <div className="grid grid-cols-1 gap-10 pt-10 lg:grid-cols-[1fr_240px] lg:gap-12 lg:pt-14">
+          <div>
+            <motion.h1
+              variants={rise}
+              custom={0}
+              initial="hidden"
+              animate="visible"
+              className="headline text-[15vw] leading-[0.88] sm:text-[12vw] lg:text-[8.2rem]"
+            >
+              I build
+              <br />
+              <span className="serif-italic font-normal text-coral">secure</span>{" "}
+              AI&nbsp;&amp;&nbsp;ML
+              <br />
+              systems<span className="text-coral">.</span>
+            </motion.h1>
 
-        <div className="h-9 md:h-12">
-          <div className="text-lg sm:text-xl text-slate-300">
-            {typing || "\u00a0"}
+            <motion.p
+              variants={rise}
+              custom={1}
+              initial="hidden"
+              animate="visible"
+              className="mt-8 font-mono text-base text-inksoft sm:text-lg"
+            >
+              <span className="text-teal">~/</span> currently shipping{" "}
+              <span className="text-ink">{typing}</span>
+              <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] animate-blink bg-ink" />
+            </motion.p>
           </div>
+
+          {/* magazine masthead column */}
+          <motion.aside
+            variants={rise}
+            custom={2}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-6 lg:border-l lg:border-line lg:pl-8"
+          >
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Role</p>
+              <p className="mt-1 font-display text-sm font-semibold">
+                AI / ML Engineer @ Nimoy AI
+              </p>
+            </div>
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Based in</p>
+              <p className="mt-1 font-display text-sm font-semibold">India · Remote</p>
+            </div>
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Focus</p>
+              <p className="mt-1 text-sm leading-relaxed text-inksoft">
+                RAG agents, vision models, and async pipelines that hold up in
+                production.
+              </p>
+            </div>
+
+            <div className="mt-2 flex flex-col gap-3">
+              <button
+                onClick={() => scrollTo("projects")}
+                className="btn-coral justify-center"
+              >
+                View work <ArrowDownRight className="h-4 w-4" />
+              </button>
+              <a
+                href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost justify-center"
+              >
+                <Download className="h-4 w-4" /> Résumé
+              </a>
+            </div>
+          </motion.aside>
         </div>
+      </div>
 
-        <p className="max-w-2xl mx-auto mt-4 text-sm md:text-base text-slate-300">
-          Hi, I'm{" "}
-          <span className="font-semibold text-slate-100">
-            Naga Parthiv Varma Varati
-          </span>
-          , a Computer Science Graduate.
-        </p>
-
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <button
-            onClick={goExp}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] px-5 py-2.5 text-sm font-medium text-slate-900 shadow-soft-glow hover:-translate-y-0.5 transition"
-          >
-            View Experience <ArrowRight className="h-4 w-4" />
-          </button>
-
-          {/* Resume Button */}
-          <a
-            href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-card px-4 py-2 text-sm font-medium text-slate-100 hover:border-primary hover:text-primary transition"
-          >
-            <Download className="h-4 w-4 animate-bounce" />
-            Resume
-          </a>
+      {/* marquee band */}
+      <div className="group mt-14 overflow-hidden border-y border-line bg-ink py-4 lg:mt-20">
+        <div className="mask-x flex w-max animate-marquee gap-8 whitespace-nowrap group-hover:[animation-play-state:paused]">
+          {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
+            <span
+              key={i}
+              className="flex items-center gap-8 font-display text-lg font-medium text-paper/90"
+            >
+              {item}
+              <span className="text-coral">✳</span>
+            </span>
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
-
-

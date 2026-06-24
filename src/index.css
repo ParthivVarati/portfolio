@@ -1,52 +1,156 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  --bg: #0b1020;
-  --card: #0f1724;
-  --muted: #94a3b8;
-  --primary: #00C2FF;
-  --accent: #7C3AED;
+:root {
+  --paper: #F2ECE0;
+  --paper-2: #EBE2D2;
+  --card: #FBF8F1;
+  --ink: #1B1A17;
+  --ink-soft: #5E574C;
+  --line: #DCD2C0;
+  --coral: #FF4D2E;
+  --teal: #0E8C7F;
+  --ocean: #0A1A2A;
+  /* legacy aliases */
+  --primary: #FF4D2E;
+  --accent: #0E8C7F;
 }
 
-html,body,#root{height:100%}
-body {
-  @apply bg-[color:var(--bg)] text-slate-100 font-body leading-relaxed;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-/* HERO exact styles */
-.hero-title{
-  font-weight:800;
-  letter-spacing:-0.02em;
-  line-height:1.01;
-  text-wrap:balance;
-}
-
-/* subtle glass card style used in many areas */
-.glass-card{
-  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
-  border: 1px solid rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px);
-}
-
-/* better clickable focus */
-button:focus{ outline:2px solid rgba(124,58,237,0.18); outline-offset:2px; }
-
-/* more compact project badges */
-.tech-chip{ font-size:11px; padding:4px 8px; border-radius:9999px; }
-
-/* scroll-behavior */
+html, body, #root { height: 100%; }
 html { scroll-behavior: smooth; }
 
-/* tiny tweaks to timeline */
-.timeline-line { width:2px; background: linear-gradient(180deg,var(--primary), rgba(124,58,237,0.8)); }
-
-/* responsive tweaks */
-@media (min-width: 1024px){
-  .hero-title{font-size:48px;}
+body {
+  @apply bg-paper text-ink font-body leading-relaxed antialiased;
+  /* faint paper grain via layered radial dots */
+  background-image:
+    radial-gradient(rgba(27, 26, 23, 0.035) 1px, transparent 1px);
+  background-size: 22px 22px;
 }
+
+::selection {
+  background: var(--coral);
+  color: #fff;
+}
+
+/* ---- Reusable display helpers ---- */
+.display {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.serif-italic {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Giant fluid headline */
+.headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+/* Outlined "watermark" number */
+.numeral-outline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(27, 26, 23, 0.18);
+}
+
+/* Editorial index row (projects / experience lists) */
+.index-row {
+  position: relative;
+  transition: color 0.35s ease;
+}
+.index-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+.index-row:hover::before { transform: scaleY(1); }
+.index-row > * { position: relative; z-index: 1; }
+
+/* fade edges for marquees */
+.mask-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+/* fine paper grain overlay */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.eyebrow {
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Paper card with a crisp ink hairline */
+.paper-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 0 rgba(27, 26, 23, 0.03), 0 18px 40px -28px rgba(27, 26, 23, 0.45);
+}
+
+/* Coral underline accent for inline emphasis */
+.ink-underline {
+  background-image: linear-gradient(transparent 62%, rgba(255, 77, 46, 0.32) 62%);
+  background-size: 100% 100%;
+}
+
+/* Buttons */
+.btn-coral {
+  @apply inline-flex items-center gap-2 rounded-full bg-coral px-5 py-2.5 text-sm font-semibold text-white transition;
+  box-shadow: 0 14px 34px -12px rgba(255, 77, 46, 0.55);
+}
+.btn-coral:hover { @apply -translate-y-0.5 bg-coraldeep; }
+
+.btn-ghost {
+  @apply inline-flex items-center gap-2 rounded-full border border-ink/25 bg-transparent px-5 py-2.5 text-sm font-semibold text-ink transition;
+}
+.btn-ghost:hover { @apply -translate-y-0.5 border-ink bg-ink/[0.04]; }
+
+/* Small bordered tag pill */
+.chip {
+  @apply inline-flex items-center rounded-full border border-line bg-paper px-3 py-1 text-xs text-inksoft;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Thin scrollbar to match paper theme */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: #cbbfa9; border-radius: 999px; border: 2px solid var(--paper); }
+::-webkit-scrollbar-thumb:hover { background: #b8aa90; }

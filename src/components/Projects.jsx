@@ -1,91 +1,53 @@
-import { motion } from "framer-motion";
-import { ExternalLink, Circle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { projects } from "../data/projects";
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.98 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { delay: 0.12 * i }
-  })
-};
+import SectionHeading from "./SectionHeading";
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-20">
-      <div className="mx-auto max-w-5xl px-4">
-        <header className="mb-10 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-              Featured Projects
-            </h2>
-            <p className="mt-2 text-sm text-slate-300">
-              Things I built to learn, break, and rebuild better.
-            </p>
-          </div>
-        </header>
+    <section id="projects" className="py-24 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionHeading
+          index="02"
+          title="Selected work"
+          subtitle="Things I built to learn, break, and rebuild better."
+        />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        {/* editorial index */}
+        <div className="border-t border-line">
           {projects.map((project, idx) => (
-            <motion.article
+            <a
               key={project.title}
-              custom={idx}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 p-4 shadow-lg shadow-slate-950/70 backdrop-blur-xl transition hover:border-primary/60 hover:shadow-glow-lg"
+              href={project.link}
+              target="_blank"
+              rel="noreferrer"
+              className="index-row group block border-b border-line"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-slate-900/40 to-accent/10 opacity-0 group-hover:opacity-100 transition" />
-              <div className="relative flex flex-col h-full gap-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-base md:text-lg font-semibold text-slate-50">
+              <div className="flex items-center gap-5 px-3 py-7 sm:px-6 sm:py-9">
+                <span className="font-mono text-sm text-inksoft transition-colors group-hover:text-coral">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="headline text-2xl text-ink transition-colors group-hover:text-paper sm:text-4xl">
                     {project.title}
                   </h3>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1 text-[11px] uppercase tracking-[0.16em] text-slate-300">
-                    <Circle
-                      className={`h-2 w-2 ${
-                        project.status === "Online"
-                          ? "text-emerald-400"
-                          : "text-amber-400"
-                      }`}
-                      fill={
-                        project.status === "Online"
-                          ? "rgb(74 222 128)"
-                          : "rgb(251 191 36)"
-                      }
-                    />
-                    {project.status}
-                  </span>
+                  <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-inksoft transition-colors group-hover:text-paper/70">
+                    {project.description}
+                  </p>
                 </div>
-                <p className="text-xs md:text-sm text-slate-200">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5 mt-1">
+
+                {/* tech list — desktop */}
+                <div className="hidden w-44 shrink-0 flex-wrap justify-end gap-x-2 gap-y-1 text-right font-mono text-[11px] text-inksoft transition-colors group-hover:text-paper/60 lg:flex">
                   {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[11px] text-slate-200"
-                    >
-                      {t}
-                    </span>
+                    <span key={t}>{t.trim()}</span>
                   ))}
                 </div>
-                <div className="mt-auto flex justify-end">
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1.5 text-[11px] font-medium text-slate-100 transition hover:border-primary hover:text-primary"
-                  >
-                    Visit
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
+
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-all duration-300 group-hover:border-coral group-hover:bg-coral group-hover:text-white">
+                  <ArrowUpRight className="h-5 w-5" />
+                </span>
               </div>
-            </motion.article>
+            </a>
           ))}
         </div>
       </div>

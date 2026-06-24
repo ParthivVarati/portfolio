@@ -1,35 +1,28 @@
 import { useState } from "react";
 import { SkillsGlobe } from "./SkillsGlobe";
 import { GlobeErrorBoundary } from "./GlobeErrorBoundary";
+import SectionHeading from "./SectionHeading";
 
 const tabs = [
-  { id: "tech", label: "TECH SKILLS" },
-  { id: "soft", label: "SOFT SKILLS" },
-  { id: "creative", label: "CREATIVE SKILLS" }
+  { id: "tech", label: "Tech" },
+  { id: "soft", label: "Soft" },
+  { id: "creative", label: "Creative" }
 ];
 
 const content = {
   tech: {
-  Languages: ["Python", "SQL"],
-
-  Frontend: ["HTML5", "CSS3", "React", "Tailwind CSS"],
-
-  Backend: ["Flask", "REST APIs"],
-
-  Database: ["MongoDB", "MySQL"],
-    
-  AIML: ["Machine Learning", "RAG"],
-
-  LLMs: ["OpenAI (GPT)", "LLaMA"],
-    
-  DLFramework: ["PyTorch"],
-
-  AIFrameworks: ["Hugging Face", "Transformers", "LangChain", "LangGraph"],
-
-  Tools: ["Docker", "Git"]
-},
+    Languages: ["Python", "SQL"],
+    Frontend: ["HTML5", "CSS3", "React", "Tailwind CSS"],
+    Backend: ["Flask", "REST APIs"],
+    Database: ["MongoDB", "MySQL"],
+    AIML: ["Machine Learning", "RAG"],
+    LLMs: ["OpenAI (GPT)", "LLaMA"],
+    DLFramework: ["PyTorch"],
+    AIFrameworks: ["Hugging Face", "Transformers", "LangChain", "LangGraph"],
+    Tools: ["Docker", "Git"]
+  },
   soft: {
-    Strengths: ["Communication", "Leadership", "Problem Solving","Teamwork", "Adaptability"]
+    Strengths: ["Communication", "Leadership", "Problem Solving", "Teamwork", "Adaptability"]
   },
   creative: {
     Creative: ["UI/UX Design", "Video Editing", "Photography"]
@@ -40,66 +33,61 @@ export default function Skills() {
   const [active, setActive] = useState("tech");
 
   return (
-    <section
-      id="skills"
-      className="relative py-[100px] sm:py-[120px]"
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="mb-10">
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Skills & Stack
-          </h2>
-          <p className="text-white/60">
-            Tools I reach for when shipping fast and clean.
-          </p>
-        </div>
+    <section id="skills" className="py-24 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionHeading
+          index="03"
+          title="Skills & stack"
+          subtitle="Tools I reach for when shipping fast and clean."
+        />
 
         {/* Tabs */}
-        <div className="mb-12 flex justify-center sm:justify-start">
-          <div className="inline-flex rounded-full bg-white/5 p-1 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActive(tab.id)}
-                className={`whitespace-nowrap px-5 py-2 text-xs rounded-full transition ${
-                  active === tab.id
-                    ? "bg-white text-black"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        <div className="mb-10 inline-flex rounded-full border border-line bg-card p-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActive(tab.id)}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+                active === tab.id
+                  ? "bg-ink text-paper"
+                  : "text-inksoft hover:text-ink"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* 🌍 Globe */}
-          <div className="order-1 lg:order-none">
-            <GlobeErrorBoundary>
-              <SkillsGlobe category={active} />
-            </GlobeErrorBoundary>
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+          {/* Paper panel hosting the globe */}
+          <div className="paper-card relative flex flex-col overflow-hidden">
+            {/* subtle coral / teal wash */}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(34rem_20rem_at_50%_0%,rgba(255,77,46,0.08),transparent_60%),radial-gradient(28rem_18rem_at_70%_110%,rgba(14,140,127,0.09),transparent_60%)]" />
+
+            <div className="relative z-10 flex items-center justify-between px-5 pt-5">
+              <span className="eyebrow text-[10px] text-inksoft">
+                {active} · skill map
+              </span>
+              <span className="flex items-center gap-2 font-mono text-[10px] text-inksoft">
+                <span className="h-1.5 w-1.5 rounded-full bg-coral" /> drag to explore
+              </span>
+            </div>
+
+            <div className="relative flex flex-1 items-center">
+              <GlobeErrorBoundary>
+                <SkillsGlobe category={active} />
+              </GlobeErrorBoundary>
+            </div>
           </div>
 
-          {/* 📋 Content */}
-          <div className="order-2 lg:order-none space-y-6">
+          {/* Content list */}
+          <div className="space-y-4">
             {Object.entries(content[active]).map(([title, items]) => (
-              <div
-                key={title}
-                className="rounded-xl border border-white/10 bg-white/5 p-5"
-              >
-                <h4 className="mb-3 text-sm tracking-widest text-white/50">
-                  {title.toUpperCase()}
-                </h4>
-
+              <div key={title} className="paper-card p-5">
+                <h4 className="eyebrow mb-3 text-[11px] text-coral">{title}</h4>
                 <div className="flex flex-wrap gap-2">
                   {items.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full bg-white/10 px-3 py-1 text-xs text-white"
-                    >
+                    <span key={item} className="chip">
                       {item}
                     </span>
                   ))}
@@ -112,5 +100,3 @@ export default function Skills() {
     </section>
   );
 }
-
-

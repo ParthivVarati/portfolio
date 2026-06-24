@@ -1,32 +1,34 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarDays, MapPin, ChevronRight } from "lucide-react";
+import { CalendarDays, MapPin, ArrowRight } from "lucide-react";
+import SectionHeading from "./SectionHeading";
 
 const experiences = [
   {
     id: 0,
     company: "Nimoy AI",
-    role: " AI Engineer ",
+    role: "AI Engineer",
     location: "Remote",
     duration: "Sep 2025 – Present",
     status: "Current",
-    accent: "blue",
     points: [
       {
-        text: "Created agents using RAG, LangChain and Integrated Letta memory, improving multi-turn context handling by ",
-        highlight: "30%",
+        text: "Created agents using RAG, LangChain and integrated Letta memory, improving multi-turn context handling by ",
+        highlight: "30%"
       },
       {
         text: "Designed async email pipelines with RabbitMQ & Celery, processing ",
-        highlight: "1k+ emails/day",
-        
+        highlight: "1k+ emails/day"
       },
       {
-        text: "Developed AI & vision solutions, including multi-API agents and PPE detection models (YOLOv8/11n + SAM 2).",
-      },
+        text: "Developed AI & vision solutions, including multi-API agents and PPE detection models (YOLOv8/11n + SAM 2)."
+      }
     ],
-    skills: ["Python", "REST APIs", "LangChain", "LangGraph", "RAG", "Letta", "RabbitMQ", "Celery", "YOLOv8", "YOLO11n", "SAM 2", "PyTorch", "OpenCV", "React", "Tailwind CSS", "Docker", "Git"
-],
+    skills: [
+      "Python", "REST APIs", "LangChain", "LangGraph", "RAG", "Letta",
+      "RabbitMQ", "Celery", "YOLOv8", "YOLO11n", "SAM 2", "PyTorch",
+      "OpenCV", "React", "Tailwind CSS", "Docker", "Git"
+    ]
   },
   {
     id: 1,
@@ -35,152 +37,115 @@ const experiences = [
     location: "Hyderabad, India",
     duration: "Jun 2024 – Jul 2024",
     status: "Completed",
-    accent: "purple",
     points: [
-      {
-        text: "Ensured data quality through software testing, dataset annotation, and output validation.",
-      },
-      {
-        text: "Identified and reported bugs, collaborating with developers to resolve issues efficiently. ",
-      
-      },
-      {
-        text: "Worked within SDLC and Agile sprints, contributing to iterative development cycles.",
-      },
+      { text: "Ensured data quality through software testing, dataset annotation, and output validation." },
+      { text: "Identified and reported bugs, collaborating with developers to resolve issues efficiently." },
+      { text: "Worked within SDLC and Agile sprints, contributing to iterative development cycles." }
     ],
-    skills: ["Manual Testing", "Data Annotation", "Bug Tracking", "SDLC", "Agile", "Git"],
-  },
+    skills: ["Manual Testing", "Data Annotation", "Bug Tracking", "SDLC", "Agile", "Git"]
+  }
 ];
 
 export default function Experience() {
   const [active, setActive] = useState(0);
   const data = experiences[active];
 
-  const accent =
-    data.accent === "blue"
-      ? {
-          text: "text-blue-400",
-          border: "border-blue-400",
-          glow: "shadow-[0_0_30px_rgba(59,130,246,0.35)]",
-          line: "from-blue-500 to-purple-500",
-        }
-      : {
-          text: "text-purple-400",
-          border: "border-purple-400",
-          glow: "shadow-[0_0_30px_rgba(168,85,247,0.35)]",
-          line: "from-purple-500 to-pink-500",
-        };
-
   return (
-    <section
-      id="experience"
-      className="relative w-full py-[120px]"
-    >
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="mb-16 flex items-center gap-6">
-          <span className="text-sm font-mono text-blue-400">01.</span>
-          <h2 className="text-3xl font-bold text-white">Experience</h2>
-          <div className="h-px flex-1 bg-white/10" />
-        </div>
+    <section id="experience" className="py-24 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5">
+        <SectionHeading
+          index="01"
+          title="Experience"
+          subtitle="Where I've shipped, learned, and broken things on purpose."
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-10 lg:gap-16">
-          {/* Sidebar / Tabs */}
-          <div className="relative lg:pl-8">
-            {/* Timeline (desktop only) */}
-            <div
-              className={`hidden lg:block absolute left-[4px] top-0 h-full w-px bg-gradient-to-b ${accent.line}`}
-            />
-
-            <div className="flex gap-3 overflow-x-auto lg:flex-col lg:space-y-4 pb-2">
-              {experiences.map((exp, idx) => (
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[5fr_7fr] lg:gap-14">
+          {/* Company selector — large type */}
+          <div className="flex flex-col">
+            {experiences.map((exp, idx) => {
+              const on = active === idx;
+              return (
                 <button
                   key={exp.id}
                   onClick={() => setActive(idx)}
-                  className={`relative min-w-[180px] lg:w-full rounded-xl px-4 py-3 text-left transition-all duration-300 ${
-                    active === idx
-                      ? "bg-[#0b1220]/70 backdrop-blur border border-white/10"
-                      : "text-white/40 hover:text-white/70"
-                  }`}
+                  className="group border-b border-line py-6 text-left"
                 >
-                  {active === idx && (
-                    <span className="hidden lg:block absolute left-0 top-0 h-full w-[3px] rounded-full bg-blue-400" />
-                  )}
-                  <span className="block text-sm font-medium">
-                    {exp.company}
-                  </span>
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`h-2.5 w-2.5 shrink-0 rounded-full transition-colors ${
+                        on ? "bg-coral" : "bg-ink/20 group-hover:bg-ink/40"
+                      }`}
+                    />
+                    <h3
+                      className={`headline text-3xl transition-colors sm:text-4xl ${
+                        on ? "text-ink" : "text-ink/35 group-hover:text-ink/70"
+                      }`}
+                    >
+                      {exp.company}
+                    </h3>
+                  </div>
+                  <div className="mt-2 flex items-center gap-3 pl-6 font-mono text-xs text-inksoft">
+                    <span>{exp.role}</span>
+                    <span className="text-line">/</span>
+                    <span>{exp.duration}</span>
+                  </div>
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* Main content */}
+          {/* Detail */}
           <AnimatePresence mode="wait">
             <motion.div
               key={data.id}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -24 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="rounded-2xl border border-white/10 bg-[#0b1220]/70 p-6 sm:p-8 lg:p-10 backdrop-blur"
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="paper-card p-7 sm:p-9"
             >
-              {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-bold text-white">
-                {data.role}{" "}
-                <span className={accent.text}>@ {data.company}</span>
-              </h3>
-
-              {/* Meta */}
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-wrap gap-4 text-sm text-white/60">
-                  <span className="flex items-center gap-2">
-                    <CalendarDays size={16} />
-                    {data.duration}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <MapPin size={16} />
-                    {data.location}
-                  </span>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h4 className="font-display text-2xl font-bold">
+                    {data.role} <span className="text-coral">@ {data.company}</span>
+                  </h4>
+                  <div className="mt-3 flex flex-wrap gap-4 text-sm text-inksoft">
+                    <span className="flex items-center gap-1.5">
+                      <CalendarDays size={15} /> {data.duration}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={15} /> {data.location}
+                    </span>
+                  </div>
                 </div>
-
                 <span
-                  className={`w-fit rounded-full px-4 py-1 text-xs font-medium ${
+                  className={`shrink-0 rounded-full border px-3.5 py-1 text-xs font-medium ${
                     data.status === "Current"
-                      ? "border border-emerald-400 text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.35)]"
-                      : "border border-white/20 text-white/50"
+                      ? "border-teal bg-teal/10 text-teal"
+                      : "border-line text-inksoft"
                   }`}
                 >
                   {data.status}
                 </span>
               </div>
 
-              {/* Bullet points */}
-              <ul className="mt-8 space-y-4 text-white/80">
+              <ul className="mt-7 space-y-3.5">
                 {data.points.map((p, i) => (
-                  <li key={i} className="flex gap-3">
-                    <ChevronRight
-                      size={18}
-                      className={`mt-[2px] ${accent.text}`}
-                    />
+                  <li key={i} className="flex gap-3 text-[15px] text-ink/85">
+                    <ArrowRight size={17} className="mt-1 shrink-0 text-coral" />
                     <span>
                       {p.text}
                       {p.highlight && (
-                        <span className="ml-1 font-semibold text-emerald-400">
-                          {p.highlight}
-                        </span>
+                        <span className="font-semibold text-teal">{p.highlight}</span>
                       )}
                     </span>
                   </li>
                 ))}
               </ul>
 
-              {/* Skills */}
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-2">
                 {data.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className={`rounded-full border px-4 py-1 text-xs backdrop-blur ${accent.border} ${accent.text} ${accent.glow}`}
-                  >
+                  <span key={skill} className="chip">
                     {skill}
                   </span>
                 ))}
@@ -192,5 +157,3 @@ export default function Experience() {
     </section>
   );
 }
-
-
