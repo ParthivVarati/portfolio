@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 
-const NAV = ["home", "experience", "projects", "skills", "education"];
+const NAV = ["home", "about", "experience", "projects", "skills", "education"];
 
 export default function Navbar({ activeSection }) {
   const [open, setOpen] = useState(false);

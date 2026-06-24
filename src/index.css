@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,6 +40,54 @@ body {
   font-family: 'Space Grotesk', sans-serif;
   letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+.serif-italic {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Giant fluid headline */
+.headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+/* Outlined "watermark" number */
+.numeral-outline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(27, 26, 23, 0.18);
+}
+
+/* Editorial index row (projects / experience lists) */
+.index-row {
+  position: relative;
+  transition: color 0.35s ease;
+}
+.index-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 0;
+}
+.index-row:hover::before { transform: scaleY(1); }
+.index-row > * { position: relative; z-index: 1; }
+
+/* fade edges for marquees */
+.mask-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 
 .eyebrow {

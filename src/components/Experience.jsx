@@ -59,31 +59,39 @@ export default function Experience() {
           subtitle="Where I've shipped, learned, and broken things on purpose."
         />
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
-          {/* Tabs */}
-          <div className="flex gap-3 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
-            {experiences.map((exp, idx) => (
-              <button
-                key={exp.id}
-                onClick={() => setActive(idx)}
-                className={`relative min-w-[180px] rounded-xl border px-4 py-3 text-left transition lg:min-w-0 ${
-                  active === idx
-                    ? "border-ink bg-ink text-paper"
-                    : "border-line bg-card text-inksoft hover:border-ink/40 hover:text-ink"
-                }`}
-              >
-                <span className="block font-display text-sm font-semibold">
-                  {exp.company}
-                </span>
-                <span
-                  className={`mt-0.5 block text-xs ${
-                    active === idx ? "text-paper/70" : "text-inksoft/80"
-                  }`}
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[5fr_7fr] lg:gap-14">
+          {/* Company selector — large type */}
+          <div className="flex flex-col">
+            {experiences.map((exp, idx) => {
+              const on = active === idx;
+              return (
+                <button
+                  key={exp.id}
+                  onClick={() => setActive(idx)}
+                  className="group border-b border-line py-6 text-left"
                 >
-                  {exp.role}
-                </span>
-              </button>
-            ))}
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`h-2.5 w-2.5 shrink-0 rounded-full transition-colors ${
+                        on ? "bg-coral" : "bg-ink/20 group-hover:bg-ink/40"
+                      }`}
+                    />
+                    <h3
+                      className={`headline text-3xl transition-colors sm:text-4xl ${
+                        on ? "text-ink" : "text-ink/35 group-hover:text-ink/70"
+                      }`}
+                    >
+                      {exp.company}
+                    </h3>
+                  </div>
+                  <div className="mt-2 flex items-center gap-3 pl-6 font-mono text-xs text-inksoft">
+                    <span>{exp.role}</span>
+                    <span className="text-line">/</span>
+                    <span>{exp.duration}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
           {/* Detail */}
@@ -94,14 +102,13 @@ export default function Experience() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="paper-card p-6 sm:p-8"
+              className="paper-card p-7 sm:p-9"
             >
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-display text-xl font-bold sm:text-2xl">
-                    {data.role}{" "}
-                    <span className="text-coral">@ {data.company}</span>
-                  </h3>
+                  <h4 className="font-display text-2xl font-bold">
+                    {data.role} <span className="text-coral">@ {data.company}</span>
+                  </h4>
                   <div className="mt-3 flex flex-wrap gap-4 text-sm text-inksoft">
                     <span className="flex items-center gap-1.5">
                       <CalendarDays size={15} /> {data.duration}
@@ -111,9 +118,8 @@ export default function Experience() {
                     </span>
                   </div>
                 </div>
-
                 <span
-                  className={`w-fit rounded-full border px-3.5 py-1 text-xs font-medium ${
+                  className={`shrink-0 rounded-full border px-3.5 py-1 text-xs font-medium ${
                     data.status === "Current"
                       ? "border-teal bg-teal/10 text-teal"
                       : "border-line text-inksoft"

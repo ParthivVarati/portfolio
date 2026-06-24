@@ -1,48 +1,32 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowDownRight, Download } from "lucide-react";
 
-const PHRASES = ["AI / ML pipelines.", "Full-stack applications.", "RAG & LLM systems."];
+const PHRASES = ["RAG & LLM agents.", "Computer-vision models.", "Async data pipelines."];
 const MARQUEE = [
   "Python", "LangChain", "RAG", "PyTorch", "YOLOv8", "React",
   "Docker", "RabbitMQ", "Celery", "Hugging Face", "LangGraph", "OpenCV"
 ];
 
 export default function Hero() {
-  const [pct, setPct] = useState(0);
   const [typing, setTyping] = useState("");
 
-  // boot counter
   useEffect(() => {
-    let start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      const t = (ts - start) / 900;
-      const eased = Math.min(100, Math.round(100 * (1 - Math.pow(1 - t, 1.8))));
-      setPct(eased);
-      if (eased < 100) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }, []);
-
-  // typewriter
-  useEffect(() => {
-    if (pct < 100) return;
     let idx = 0;
     let char = 0;
-
+    let timer;
     const run = () => {
       const current = PHRASES[idx];
       if (char <= current.length) {
         setTyping(current.slice(0, char));
         char++;
-        setTimeout(run, 45);
+        timer = setTimeout(run, 48);
       } else {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           const del = () => {
             if (char >= 0) {
               setTyping(current.slice(0, char));
               char--;
-              setTimeout(del, 20);
+              timer = setTimeout(del, 22);
             } else {
               idx = (idx + 1) % PHRASES.length;
               char = 0;
@@ -50,81 +34,95 @@ export default function Hero() {
             }
           };
           del();
-        }, 1300);
+        }, 1400);
       }
     };
     run();
-  }, [pct]);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const goExp = () =>
-    document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
-    <section id="home" className="relative overflow-hidden pt-28 sm:pt-32">
-      <div className="mx-auto max-w-6xl px-5">
-        {/* status eyebrow */}
-        <div className="flex items-center gap-3">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-coral/60" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-coral" />
-          </span>
-          <span className="eyebrow text-[11px] text-inksoft">
-            {pct < 100
-              ? `booting portfolio · ${String(pct).padStart(3, "0")}%`
-              : "open to opportunities · 2026"}
+    <section id="home" className="relative flex min-h-screen flex-col justify-center overflow-hidden pt-24">
+      <div className="mx-auto w-full max-w-6xl px-5">
+        {/* masthead top rule */}
+        <div className="flex items-center justify-between border-b border-line pb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-inksoft">
+          <span>Portfolio — 2026</span>
+          <span className="hidden sm:inline">Naga Parthiv Varma Varati</span>
+          <span className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-teal" />
+            Open to work
           </span>
         </div>
 
-        {/* headline */}
-        <h1 className="display mt-7 text-[2.6rem] font-bold leading-[1.04] sm:text-6xl md:text-7xl">
-          I build secure, reliable
-          <br />
-          <span className="text-coral">AI &amp; ML systems</span>
-          <span className="text-ink">.</span>
-        </h1>
+        {/* headline + meta */}
+        <div className="grid grid-cols-1 gap-10 pt-10 lg:grid-cols-[1fr_240px] lg:gap-12 lg:pt-14">
+          <div>
+            <h1 className="headline text-[15vw] leading-[0.88] sm:text-[12vw] lg:text-[8.2rem]">
+              I build
+              <br />
+              <span className="serif-italic font-normal text-coral">secure</span>{" "}
+              AI&nbsp;&amp;&nbsp;ML
+              <br />
+              systems<span className="text-coral">.</span>
+            </h1>
 
-        {/* typewriter line */}
-        <div className="mt-5 h-8 sm:h-9">
-          <p className="font-mono text-base text-inksoft sm:text-lg">
-            <span className="text-teal">&gt;</span> {typing}
-            <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[2px] animate-blink bg-ink" />
-          </p>
-        </div>
+            <p className="mt-8 font-mono text-base text-inksoft sm:text-lg">
+              <span className="text-teal">~/</span> currently shipping{" "}
+              <span className="text-ink">{typing}</span>
+              <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] animate-blink bg-ink" />
+            </p>
+          </div>
 
-        {/* intro */}
-        <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-inksoft sm:text-base">
-          Hi, I&apos;m{" "}
-          <span className="font-semibold text-ink ink-underline">
-            Naga Parthiv Varma Varati
-          </span>
-          , a Computer Science graduate engineering RAG agents, vision models, and
-          async pipelines that hold up in production.
-        </p>
+          {/* magazine masthead column */}
+          <aside className="flex flex-col gap-6 lg:border-l lg:border-line lg:pl-8">
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Role</p>
+              <p className="mt-1 font-display text-sm font-semibold">
+                AI / ML Engineer @ Nimoy AI
+              </p>
+            </div>
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Based in</p>
+              <p className="mt-1 font-display text-sm font-semibold">India · Remote</p>
+            </div>
+            <div>
+              <p className="eyebrow text-[10px] text-inksoft">Focus</p>
+              <p className="mt-1 text-sm leading-relaxed text-inksoft">
+                RAG agents, vision models, and async pipelines that hold up in
+                production.
+              </p>
+            </div>
 
-        {/* CTAs */}
-        <div className="mt-9 flex flex-wrap items-center gap-3">
-          <button onClick={goExp} className="btn-coral">
-            View experience <ArrowRight className="h-4 w-4" />
-          </button>
-          <a
-            href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-ghost"
-          >
-            <Download className="h-4 w-4" />
-            Résumé
-          </a>
+            <div className="mt-2 flex flex-col gap-3">
+              <button
+                onClick={() => scrollTo("projects")}
+                className="btn-coral justify-center"
+              >
+                View work <ArrowDownRight className="h-4 w-4" />
+              </button>
+              <a
+                href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost justify-center"
+              >
+                <Download className="h-4 w-4" /> Résumé
+              </a>
+            </div>
+          </aside>
         </div>
       </div>
 
       {/* marquee band */}
-      <div className="mt-16 overflow-hidden border-y border-line bg-paper2/70 py-3.5 sm:mt-20">
-        <div className="flex w-max animate-marquee gap-10 whitespace-nowrap">
-          {[...MARQUEE, ...MARQUEE].map((item, i) => (
+      <div className="mt-14 overflow-hidden border-y border-line bg-ink py-4 lg:mt-20">
+        <div className="mask-x flex w-max animate-marquee gap-8 whitespace-nowrap">
+          {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
             <span
               key={i}
-              className="flex items-center gap-10 font-mono text-sm text-inksoft"
+              className="flex items-center gap-8 font-display text-lg font-medium text-paper/90"
             >
               {item}
               <span className="text-coral">✳</span>

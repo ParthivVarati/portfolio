@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import SideRail from "./components/SideRail";
 import Hero from "./components/Hero";
+import About from "./components/About";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
@@ -10,6 +12,7 @@ import Footer from "./components/Footer";
 
 const SECTION_IDS = [
   "home",
+  "about",
   "experience",
   "projects",
   "skills",
@@ -33,7 +36,7 @@ export default function App() {
           }
         }
       },
-      { threshold: [0.3, 0.5, 0.75] }
+      { threshold: [0.2, 0.4, 0.6] }
     );
 
     SECTION_IDS.forEach((id) => {
@@ -45,14 +48,16 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-paper text-ink">
+    <div className="relative min-h-screen overflow-x-hidden bg-paper text-ink">
       {/* Soft warm wash anchored to the corners, very subtle */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgba(255,77,46,0.10),transparent_60%),radial-gradient(50rem_36rem_at_-10%_110%,rgba(14,140,127,0.10),transparent_60%)]" />
 
       <Navbar activeSection={activeSection} />
+      <SideRail activeSection={activeSection} />
 
       <main>
         <Hero />
+        <About />
         <Experience />
         <Projects />
         <Skills />

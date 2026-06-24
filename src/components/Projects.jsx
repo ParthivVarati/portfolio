@@ -1,16 +1,6 @@
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "../data/projects";
 import SectionHeading from "./SectionHeading";
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.1 * i, duration: 0.45, ease: "easeOut" }
-  })
-};
 
 export default function Projects() {
   return (
@@ -22,54 +12,42 @@ export default function Projects() {
           subtitle="Things I built to learn, break, and rebuild better."
         />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        {/* editorial index */}
+        <div className="border-t border-line">
           {projects.map((project, idx) => (
-            <motion.a
+            <a
               key={project.title}
               href={project.link}
               target="_blank"
               rel="noreferrer"
-              custom={idx}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              className="paper-card group relative flex flex-col p-6 transition duration-300 hover:-translate-y-1 hover:shadow-lift"
+              className="index-row group block border-b border-line"
             >
-              {/* number + status */}
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-inksoft">
+              <div className="flex items-center gap-5 px-3 py-7 sm:px-6 sm:py-9">
+                <span className="font-mono text-sm text-inksoft transition-colors group-hover:text-coral">
                   {String(idx + 1).padStart(2, "0")}
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-inksoft">
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      project.status === "Online" ? "bg-teal" : "bg-coral"
-                    }`}
-                  />
-                  {project.status}
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="headline text-2xl text-ink transition-colors group-hover:text-paper sm:text-4xl">
+                    {project.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-inksoft transition-colors group-hover:text-paper/70">
+                    {project.description}
+                  </p>
+                </div>
+
+                {/* tech list — desktop */}
+                <div className="hidden w-44 shrink-0 flex-wrap justify-end gap-x-2 gap-y-1 text-right font-mono text-[11px] text-inksoft transition-colors group-hover:text-paper/60 lg:flex">
+                  {project.tech.map((t) => (
+                    <span key={t}>{t.trim()}</span>
+                  ))}
+                </div>
+
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-all duration-300 group-hover:border-coral group-hover:bg-coral group-hover:text-white">
+                  <ArrowUpRight className="h-5 w-5" />
                 </span>
               </div>
-
-              <h3 className="mt-4 flex items-start justify-between gap-3 font-display text-lg font-bold leading-snug">
-                <span className="transition group-hover:text-coral">
-                  {project.title}
-                </span>
-                <ArrowUpRight className="mt-0.5 h-5 w-5 shrink-0 text-inksoft transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-coral" />
-              </h3>
-
-              <p className="mt-3 text-sm leading-relaxed text-inksoft">
-                {project.description}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-2 pt-1">
-                {project.tech.map((t) => (
-                  <span key={t} className="chip">
-                    {t.trim()}
-                  </span>
-                ))}
-              </div>
-            </motion.a>
+            </a>
           ))}
         </div>
       </div>

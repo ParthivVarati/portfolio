@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { GraduationCap } from "lucide-react";
 import { education } from "../data/education";
 import SectionHeading from "./SectionHeading";
 
@@ -13,30 +12,29 @@ export default function Education() {
           subtitle="Formal learning that shaped how I think about systems."
         />
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="border-t border-line">
           {education.map((ed, idx) => (
-            <motion.article
+            <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: idx * 0.12, duration: 0.4 }}
-              className="paper-card flex items-start gap-4 p-6"
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: idx * 0.1, duration: 0.45 }}
+              className="grid grid-cols-1 gap-2 border-b border-line py-8 sm:grid-cols-[200px_1fr_auto] sm:items-center sm:gap-8"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line bg-paper text-coral">
-                <GraduationCap className="h-5 w-5" />
+              <span className="numeral-outline text-3xl sm:text-4xl">
+                {ed.period.split("–")[0].trim()}
               </span>
-              <div className="min-w-0">
-                <h3 className="font-display text-base font-bold">{ed.institute}</h3>
-                <p className="mt-0.5 text-sm text-inksoft">{ed.degree}</p>
-                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-inksoft">
-                  <span className="font-mono">{ed.period}</span>
-                  <span className="rounded-full bg-teal/10 px-2.5 py-0.5 font-medium text-teal">
-                    {ed.score}
-                  </span>
-                </div>
+              <div>
+                <h3 className="font-display text-xl font-bold sm:text-2xl">
+                  {ed.institute}
+                </h3>
+                <p className="mt-1 text-sm text-inksoft">{ed.degree}</p>
               </div>
-            </motion.article>
+              <span className="w-fit rounded-full border border-teal bg-teal/10 px-4 py-1.5 font-mono text-xs font-medium text-teal">
+                {ed.score}
+              </span>
+            </motion.div>
           ))}
         </div>
       </div>

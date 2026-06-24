@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         display: ["'Space Grotesk'", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["Fraunces", "ui-serif", "Georgia", "serif"],
         body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["'Space Mono'", "ui-monospace", "monospace"]
       },
