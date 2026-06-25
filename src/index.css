@@ -1,52 +1,146 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=VT323&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  --bg: #0b1020;
-  --card: #0f1724;
-  --muted: #94a3b8;
-  --primary: #00C2FF;
-  --accent: #7C3AED;
+:root {
+  --white: #060907;
+  --paper: #0D120F;
+  --ink: #E8EEE8;
+  --sub: #8A958A;
+  --line: rgba(150, 180, 150, 0.14);
+  --green: #4ADE80;
+  --green-dk: #2BBA63;
+  --green-tint: rgba(74, 222, 128, 0.12);
+  /* legacy */
+  --primary: #4ADE80;
+  --accent: #4ADE80;
 }
 
-html,body,#root{height:100%}
-body {
-  @apply bg-[color:var(--bg)] text-slate-100 font-body leading-relaxed;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-/* HERO exact styles */
-.hero-title{
-  font-weight:800;
-  letter-spacing:-0.02em;
-  line-height:1.01;
-  text-wrap:balance;
-}
-
-/* subtle glass card style used in many areas */
-.glass-card{
-  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.01) 100%);
-  border: 1px solid rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px);
-}
-
-/* better clickable focus */
-button:focus{ outline:2px solid rgba(124,58,237,0.18); outline-offset:2px; }
-
-/* more compact project badges */
-.tech-chip{ font-size:11px; padding:4px 8px; border-radius:9999px; }
-
-/* scroll-behavior */
+html, body, #root { height: 100%; }
 html { scroll-behavior: smooth; }
 
-/* tiny tweaks to timeline */
-.timeline-line { width:2px; background: linear-gradient(180deg,var(--primary), rgba(124,58,237,0.8)); }
-
-/* responsive tweaks */
-@media (min-width: 1024px){
-  .hero-title{font-size:48px;}
+body {
+  @apply bg-white text-ink font-body antialiased;
+  font-feature-settings: "ss01", "cv01", "tnum";
 }
+
+::selection { background: var(--green); color: #060907; }
+
+/* ---- Type helpers ---- */
+.display {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* retro VCR/OSD label, like result.dev */
+.label {
+  font-family: 'VT323', 'JetBrains Mono', monospace;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Animated underline link */
+.link {
+  position: relative;
+  display: inline-block;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1.5px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* Sharp hairline panel — the result.dev look */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+/* Buttons (sharp corners) */
+.btn-green {
+  @apply inline-flex items-center justify-center gap-2 bg-green px-5 py-3 text-sm font-semibold text-white transition;
+}
+.btn-green:hover { @apply bg-greendk; }
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 border border-ink px-5 py-3 text-sm font-semibold text-ink transition;
+}
+.btn-outline:hover { @apply bg-ink text-white; }
+
+/* small tag */
+.tag {
+  @apply inline-flex items-center border border-line px-2.5 py-1 text-xs text-sub;
+}
+
+/* marquee edge fade */
+.mask-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* ---- Lenis smooth scroll ---- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---- CRT scanline overlay (dark) ---- */
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(180, 220, 180, 0.035) 0px,
+    rgba(180, 220, 180, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.5;
+}
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(74, 222, 128, 0.06), transparent);
+  height: 26%;
+  animation: scan 7s linear infinite;
+}
+@keyframes scan {
+  0% { transform: translateY(-30%); }
+  100% { transform: translateY(360%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: #cfcfc6; border: 3px solid var(--paper); }
+::-webkit-scrollbar-thumb:hover { background: #b9b9ad; }

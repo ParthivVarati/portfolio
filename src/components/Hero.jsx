@@ -1,154 +1,144 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, ArrowDownRight } from "lucide-react";
+
+const PHRASES = ["RAG & LLM agents.", "computer-vision models.", "async data pipelines."];
+const MARQUEE = [
+  "Python", "LangChain", "RAG", "PyTorch", "YOLOv8", "React",
+  "Docker", "RabbitMQ", "Celery", "Hugging Face", "LangGraph", "OpenCV"
+];
+
+const rise = {
+  hidden: { opacity: 0, y: 22 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.08 + i * 0.09, duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+  })
+};
 
 export default function Hero() {
-  const [pct, setPct] = useState(0);
-  const phrases = ["AI/ML Pipelines.", "Full Stack Applications.", "RAG & LLM Systems."];
   const [typing, setTyping] = useState("");
 
   useEffect(() => {
-    let start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      const t = (ts - start) / 900;
-      const eased = Math.min(100, Math.round(100 * (1 - Math.pow(1 - t, 1.8))));
-      setPct(eased);
-      if (eased < 100) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }, []);
-
-  useEffect(() => {
-    if (pct < 100) return;
     let idx = 0;
     let char = 0;
-
+    let timer;
     const run = () => {
-      const current = phrases[idx];
+      const current = PHRASES[idx];
       if (char <= current.length) {
         setTyping(current.slice(0, char));
         char++;
-        setTimeout(run, 40);
+        timer = setTimeout(run, 48);
       } else {
-        setTimeout(() => {
+        timer = setTimeout(() => {
           const del = () => {
             if (char >= 0) {
               setTyping(current.slice(0, char));
               char--;
-              setTimeout(del, 18);
+              timer = setTimeout(del, 22);
             } else {
-              idx = (idx + 1) % phrases.length;
+              idx = (idx + 1) % PHRASES.length;
               char = 0;
               run();
             }
           };
           del();
-        }, 1200);
+        }, 1400);
       }
     };
     run();
-  }, [pct]);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const goExp = () =>
-    document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (window.__lenis) window.__lenis.scrollTo(el);
+    else el.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <section
-      id="home"
-      className="relative min-h-[86vh] flex items-center justify-center overflow-hidden"
-    >
-      {/* Background blobs */}
-      <svg
-        className="absolute -top-40 -left-40 opacity-30 w-[36rem] h-[36rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0" stopColor="#00C2FF" stopOpacity="0.24" />
-            <stop offset="1" stopColor="#7C3AED" stopOpacity="0.24" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g1)"
-          />
-        </g>
-      </svg>
-
-      <svg
-        className="absolute -bottom-44 -right-40 opacity-28 w-[42rem] h-[42rem] pointer-events-none"
-        viewBox="0 0 600 600"
-      >
-        <defs>
-          <linearGradient id="g2" x1="0" x2="1">
-            <stop offset="0" stopColor="#7C3AED" stopOpacity="0.18" />
-            <stop offset="1" stopColor="#00C2FF" stopOpacity="0.18" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(300,300)">
-          <path
-            d="M120,-160C155,-136,190,-100,198,-55C206,-11,187,40,158,84C129,129,88,165,41,186C-6,207,-59,212,-104,190C-149,168,-185,118,-194,64C-203,10,-185,-45,-152,-84C-119,-123,-71,-146,-24,-162C23,-178,46,-184,120,-160Z"
-            fill="url(#g2)"
-          />
-        </g>
-      </svg>
-
-      <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 text-center">
-        <div className="inline-flex items-center gap-3 mb-6 justify-center">
-          <div className="w-3 h-3 rounded-full bg-[var(--primary)] animate-pulse" />
-          <div className="text-xs font-mono text-slate-300 glass-card px-3 py-1 rounded-full">
-            {pct < 100
-              ? `Loading your experience… ${String(pct).padStart(3, "0")}%`
-              : "Experience ready"}
-          </div>
-        </div>
-
-        <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-          <span className="block">I build secure, reliable</span>
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] block">
-            AI and ML systems.
+    <section id="home" className="relative flex min-h-screen flex-col justify-center overflow-hidden pt-24">
+      <div className="mx-auto w-full max-w-4xl px-5 text-center">
+        <motion.div variants={rise} custom={0} initial="hidden" animate="visible">
+          <span className="label inline-flex items-center gap-2 border border-line px-3 py-1.5 text-sub">
+            <span className="h-1.5 w-1.5 bg-green" />
+            AI / ML Engineer · Available for work
           </span>
-        </h1>
+        </motion.div>
 
-        <div className="h-9 md:h-12">
-          <div className="text-lg sm:text-xl text-slate-300">
-            {typing || "\u00a0"}
-          </div>
-        </div>
+        {/* big centred statement */}
+        <motion.h1
+          variants={rise}
+          custom={1}
+          initial="hidden"
+          animate="visible"
+          className="display mt-8 text-[12.5vw] leading-[0.93] sm:text-[8vw] lg:text-[6.6rem]"
+        >
+          Where AI ships to
+          <br />
+          <span className="text-green">production.</span>
+        </motion.h1>
 
-        <p className="max-w-2xl mx-auto mt-4 text-sm md:text-base text-slate-300">
-          Hi, I'm{" "}
-          <span className="font-semibold text-slate-100">
-            Naga Parthiv Varma Varati
-          </span>
-          , a Computer Science Graduate.
-        </p>
+        {/* single subhead line, result.dev style */}
+        <motion.p
+          variants={rise}
+          custom={2}
+          initial="hidden"
+          animate="visible"
+          className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-sub sm:text-xl"
+        >
+          I&apos;m Naga Parthiv — an AI/ML engineer building agents, vision models,
+          and pipelines that hold up when real users show up.
+        </motion.p>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <button
-            onClick={goExp}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] px-5 py-2.5 text-sm font-medium text-slate-900 shadow-soft-glow hover:-translate-y-0.5 transition"
-          >
-            View Experience <ArrowRight className="h-4 w-4" />
+        <motion.p
+          variants={rise}
+          custom={3}
+          initial="hidden"
+          animate="visible"
+          className="mono mt-5 text-sm text-sub"
+        >
+          <span className="text-green">&gt;</span> currently shipping{" "}
+          <span className="text-ink">{typing}</span>
+          <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[3px] animate-blink bg-ink" />
+        </motion.p>
+
+        <motion.div
+          variants={rise}
+          custom={4}
+          initial="hidden"
+          animate="visible"
+          className="mt-10 flex flex-wrap items-center justify-center gap-3"
+        >
+          <button onClick={() => scrollTo("contact")} className="btn-green">
+            Get in touch <ArrowDownRight className="h-4 w-4" />
           </button>
-
-          {/* Resume Button */}
           <a
             href="https://drive.google.com/file/d/1N8_VzH1kNRCk4k6jAwDQTbfrVsSsgIVp/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-card px-4 py-2 text-sm font-medium text-slate-100 hover:border-primary hover:text-primary transition"
+            className="btn-outline"
           >
-            <Download className="h-4 w-4 animate-bounce" />
-            Resume
+            Résumé <ArrowRight className="h-4 w-4" />
           </a>
+        </motion.div>
+      </div>
+
+      {/* marquee band — result.dev's horizontal scroller */}
+      <div className="group mt-16 border-y border-line bg-paper sm:mt-20">
+        <div className="mask-x overflow-hidden py-4">
+          <div className="flex w-max animate-marquee gap-10 whitespace-nowrap group-hover:[animation-play-state:paused]">
+            {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((item, i) => (
+              <span key={i} className="flex items-center gap-10 text-lg font-medium text-ink/70">
+                {item}
+                <span className="text-green">/</span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-
-

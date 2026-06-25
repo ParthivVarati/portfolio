@@ -1,97 +1,68 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Check } from "lucide-react";
 
 const EMAIL = "parthivvarati@gmail.com";
 
+const LINKS = [
+  { label: "GitHub", href: "https://github.com/ParthivVarati", icon: Github },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/naga-parthiv/", icon: Linkedin }
+];
+
 export default function Contact() {
+  const [copied, setCopied] = useState(false);
+
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
-      alert("Email copied to clipboard!");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
     } catch (err) {
       console.error("Failed to copy email", err);
     }
   };
 
   return (
-    <section id="contact" className="py-20">
-      <div className="mx-auto max-w-5xl px-4">
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-center">
-          {/* Left section */}
-          <motion.div
-            initial={{ opacity: 0, y: 26 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="space-y-3"
-          >
-            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
-              Let&apos;s build something together.
-            </h2>
-            <p className="text-sm text-slate-300">
-              If you&apos;re working on something interesting—APIs, infra, or a
-              product that needs a backend brain—I&apos;d love to talk. Short-term
-              gigs, internships, or full-time roles are all welcome.
-            </p>
+    <section id="contact" className="border-t border-line">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+        className="mx-auto max-w-3xl px-5 py-28 text-center sm:py-40"
+      >
+        <span className="label text-green">( Your turn )</span>
+        <h2 className="display mt-7 text-[12vw] leading-[0.95] sm:text-7xl lg:text-8xl">
+          Let&apos;s build
+          <br />
+          <span className="text-green">something.</span>
+        </h2>
+        <p className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-sub">
+          Got something interesting — APIs, infra, or a product that needs an AI
+          brain? Internships, contracts, and full-time roles all welcome.
+        </p>
 
-            {/* Copy email button */}
-            <button
-              onClick={copyEmail}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-sm font-medium text-slate-950 shadow-glow-sm hover:-translate-y-0.5 transition-transform"
-            >
-              <Mail className="h-4 w-4" />
-              Copy Email
-            </button>
-          </motion.div>
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <button onClick={copyEmail} className="btn-green !px-7 !py-4 text-base">
+            {copied ? <Check className="h-4 w-4" /> : <Mail className="h-4 w-4" />}
+            {copied ? "Copied to clipboard!" : EMAIL}
+          </button>
 
-          {/* Right section */}
-          <motion.div
-            initial={{ opacity: 0, y: 26 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-md shadow-slate-950/70"
-          >
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              Connect
-            </p>
-
-            <div className="flex flex-wrap gap-3">
-              {/* Copy email pill */}
-              <button
-                onClick={copyEmail}
-                className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/80 px-3 py-1.5 text-xs text-slate-100 hover:border-primary hover:text-primary"
-              >
-                <Mail className="h-4 w-4" />
-                <span>Email</span>
-              </button>
-
+          <div className="flex items-center gap-2">
+            {LINKS.map(({ label, href, icon: Icon }) => (
               <a
-                href="https://github.com/ParthivVarati"
+                key={label}
+                href={href}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/80 px-3 py-1.5 text-xs text-slate-100 hover:border-primary hover:text-primary"
+                className="link mono inline-flex items-center gap-2 px-3 py-2 text-sm text-sub hover:text-ink"
               >
-                <Github className="h-4 w-4" />
-                <span>GitHub</span>
+                <Icon className="h-4 w-4" /> {label}
               </a>
-
-              <a
-                href="https://www.linkedin.com/in/naga-parthiv/"
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/80 px-3 py-1.5 text-xs text-slate-100 hover:border-primary hover:text-primary"
-              >
-                <Linkedin className="h-4 w-4" />
-                <span>LinkedIn</span>
-              </a>
-            </div>
-
-            <p className="text-[11px] text-slate-400">
-              Usually quick to respond. Feel free to attach repos, designs, or a
-              short brief.
-            </p>
-          </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

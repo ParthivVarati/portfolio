@@ -4,30 +4,45 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["'JetBrains Mono'", "ui-monospace", "monospace"]
       },
       colors: {
-        primary: "#00C2FF",    // stronger cyan like original
-        accent: "#7C3AED",     // purple accent
-        bg: "#0b1020",
-        card: "#0f1724"
+        // Dark CRT "terminal" palette (result.dev, dark)
+        white: "#060907", // page background (dark)
+        paper: "#0D120F", // elevated surface
+        ink: "#E8EEE8", // primary text (light)
+        sub: "#8A958A", // muted text
+        line: "rgba(150,180,150,0.14)",
+        green: "#4ADE80",
+        greendk: "#2BBA63",
+        greentint: "rgba(74,222,128,0.12)",
+        // legacy aliases
+        primary: "#4ADE80",
+        accent: "#4ADE80",
+        bg: "#060907",
+        card: "#0D120F"
+      },
+      letterSpacing: {
+        tightest: "-0.045em"
       },
       boxShadow: {
-        "soft-glow": "0 8px 30px rgba(124,58,237,0.12)",
-        "accent-glow": "0 10px 50px rgba(0,194,255,0.08)"
+        glow: "0 0 28px rgba(74,222,128,0.22)"
       },
       keyframes: {
-        floaty: {
-          "0%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-8px)" },
-          "100%": { transform: "translateY(0px)" }
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" }
         },
-        slowspin: { "0%": { transform: "rotate(0deg)" }, "100%": { transform: "rotate(360deg)" } }
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" }
+        }
       },
       animation: {
-        floaty: "floaty 6s ease-in-out infinite",
-        slowspin: "slowspin 30s linear infinite"
+        marquee: "marquee 28s linear infinite",
+        blink: "blink 1.05s step-end infinite"
       }
     }
   },
