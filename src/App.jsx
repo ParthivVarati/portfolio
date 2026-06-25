@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import Navbar from "./components/Navbar";
-import MatrixRain from "./components/MatrixRain";
+import SideRail from "./components/SideRail";
+import ScrollProgress from "./components/ScrollProgress";
 import Hero from "./components/Hero";
-import Statement from "./components/Statement";
-import Capabilities from "./components/Capabilities";
-import TechCarousel from "./components/TechCarousel";
+import About from "./components/About";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
@@ -13,7 +12,15 @@ import Education from "./components/Education";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
-const SECTION_IDS = ["home", "experience", "projects", "skills", "education", "contact"];
+const SECTION_IDS = [
+  "home",
+  "about",
+  "experience",
+  "projects",
+  "skills",
+  "education",
+  "contact"
+];
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -61,28 +68,27 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen text-ink">
-      {/* tech code-rain behind everything */}
-      <MatrixRain />
-      {/* CRT scanline overlay on top */}
-      <div className="scanlines pointer-events-none fixed inset-0 z-[100]" />
+    <div className="relative min-h-screen overflow-x-hidden bg-paper text-ink">
+      {/* Soft warm wash anchored to the corners, very subtle */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(60rem_40rem_at_85%_-10%,rgba(255,77,46,0.10),transparent_60%),radial-gradient(50rem_36rem_at_-10%_110%,rgba(14,140,127,0.10),transparent_60%)]" />
+      {/* fine paper grain */}
+      <div className="grain pointer-events-none fixed inset-0 -z-10 opacity-[0.05] mix-blend-multiply" />
 
+      <ScrollProgress />
       <Navbar activeSection={activeSection} />
+      <SideRail activeSection={activeSection} />
 
-      <div className="relative z-10">
-        <main>
-          <Hero />
-          <Statement />
-          <Capabilities />
-          <TechCarousel />
-          <Experience />
-          <Projects />
-          <Skills />
-          <Education />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
+      <main>
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Education />
+        <Contact />
+      </main>
+
+      <Footer />
     </div>
   );
 }

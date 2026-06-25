@@ -12,6 +12,9 @@ build/
 .vite/
 *.local
 
+# build output
+dist/
+
 # logs
 *.log
 npm-debug.log*
@@ -34,3 +37,11 @@ vite-dev.log
 *.sln
 .DS_Store
 Thumbs.db
+
+# vite cache
+.vite/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
