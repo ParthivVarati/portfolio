@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Lenis from "lenis";
 import Navbar from "./components/Navbar";
 import SideRail from "./components/SideRail";
 import ScrollProgress from "./components/ScrollProgress";
@@ -24,6 +25,28 @@ const SECTION_IDS = [
 export default function App() {
   const [activeSection, setActiveSection] = useState("home");
 
+  // result.dev-style smooth momentum scroll
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true
+    });
+    let raf;
+    const loop = (time) => {
+      lenis.raf(time);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    window.__lenis = lenis;
+    return () => {
+      cancelAnimationFrame(raf);
+      lenis.destroy();
+      window.__lenis = null;
+    };
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -32,19 +55,15 @@ export default function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) {
           const id = visible[0].target.id;
-          if (SECTION_IDS.includes(id)) {
-            setActiveSection(id);
-          }
+          if (SECTION_IDS.includes(id)) setActiveSection(id);
         }
       },
       { threshold: [0.2, 0.4, 0.6] }
     );
-
     SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
-
     return () => observer.disconnect();
   }, []);
 
