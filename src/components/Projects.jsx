@@ -1,55 +1,88 @@
-import { ArrowUpRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowUpRight, Github } from "lucide-react";
 import { projects } from "../data/projects";
-import SectionHeading from "./SectionHeading";
 
 export default function Projects() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: targetRef });
+  // drive horizontal travel from vertical scroll
+  const x = useTransform(scrollYProgress, [0, 1], ["1%", "-72%"]);
+  const progressW = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section id="projects" className="py-24 sm:py-28">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading
-          index="02"
-          title="Selected work"
-          subtitle="Things I built to learn, break, and rebuild better."
-        />
+    <section id="projects" ref={targetRef} className="relative h-[320vh]">
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        {/* header row */}
+        <div className="mx-auto mb-10 w-full max-w-7xl px-5 sm:px-8">
+          <div className="flex items-end justify-between border-t border-ink pt-5">
+            <div className="flex items-baseline gap-4">
+              <span className="mono text-sm font-medium text-green">(03)</span>
+              <h2 className="display text-4xl sm:text-5xl">Selected work</h2>
+            </div>
+            <span className="mono hidden text-xs text-sub sm:block">scroll →</span>
+          </div>
+          {/* scroll progress bar */}
+          <div className="mt-5 h-[2px] w-full bg-line">
+            <motion.div style={{ width: progressW }} className="h-full bg-green" />
+          </div>
+        </div>
 
-        {/* editorial index */}
-        <div className="border-t border-line">
+        {/* horizontal track */}
+        <motion.div style={{ x }} className="flex gap-5 pl-5 sm:pl-8">
           {projects.map((project, idx) => (
-            <a
+            <article
               key={project.title}
-              href={project.link}
-              target="_blank"
-              rel="noreferrer"
-              className="index-row group block border-b border-line"
+              className="panel group flex h-[58vh] w-[80vw] shrink-0 flex-col p-7 sm:w-[46vw] lg:w-[34vw]"
             >
-              <div className="flex items-center gap-5 px-3 py-7 sm:px-6 sm:py-9">
-                <span className="font-mono text-sm text-inksoft transition-colors group-hover:text-coral">
-                  {String(idx + 1).padStart(2, "0")}
-                </span>
-
-                <div className="min-w-0 flex-1">
-                  <h3 className="headline text-2xl text-ink transition-colors group-hover:text-paper sm:text-4xl">
-                    {project.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-1 max-w-2xl text-sm text-inksoft transition-colors group-hover:text-paper/70">
-                    {project.description}
-                  </p>
-                </div>
-
-                {/* tech list — desktop */}
-                <div className="hidden w-44 shrink-0 flex-wrap justify-end gap-x-2 gap-y-1 text-right font-mono text-[11px] text-inksoft transition-colors group-hover:text-paper/60 lg:flex">
-                  {project.tech.map((t) => (
-                    <span key={t}>{t.trim()}</span>
-                  ))}
-                </div>
-
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-all duration-300 group-hover:border-coral group-hover:bg-coral group-hover:text-white">
-                  <ArrowUpRight className="h-5 w-5" />
+              <div className="flex items-center justify-between">
+                <span className="mono text-sm text-sub">0{idx + 1}</span>
+                <span className={`label px-2.5 py-1 ${project.status === "Online" ? "bg-greentint text-green" : "border border-line text-sub"}`}>
+                  {project.status}
                 </span>
               </div>
-            </a>
+
+              <h3 className="mt-8 text-4xl font-bold leading-[0.98] tracking-tightest sm:text-5xl">
+                {project.title}
+              </h3>
+
+              <p className="mt-5 max-w-md text-[15px] leading-relaxed text-sub">
+                {project.description}
+              </p>
+
+              <div className="mt-auto flex items-end justify-between gap-4 pt-8">
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((t) => (
+                    <span key={t} className="tag">{t.trim()}</span>
+                  ))}
+                </div>
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center border border-ink transition-all duration-300 group-hover:bg-green group-hover:border-green group-hover:text-black"
+                  aria-label={`Visit ${project.title}`}
+                >
+                  <ArrowUpRight className="h-5 w-5" />
+                </a>
+              </div>
+            </article>
           ))}
-        </div>
+
+          {/* end card */}
+          <a
+            href="https://github.com/ParthivVarati"
+            target="_blank"
+            rel="noreferrer"
+            className="group flex h-[58vh] w-[80vw] shrink-0 flex-col items-center justify-center gap-5 border border-line bg-black p-7 text-ink sm:w-[46vw] lg:w-[28vw]"
+          >
+            <Github className="h-10 w-10 text-green" />
+            <span className="display text-3xl">More on GitHub</span>
+            <span className="inline-flex items-center gap-2 border border-ink/30 px-5 py-3 text-sm font-semibold transition group-hover:bg-green group-hover:border-green group-hover:text-black">
+              @ParthivVarati <ArrowUpRight className="h-4 w-4" />
+            </span>
+          </a>
+        </motion.div>
       </div>
     </section>
   );

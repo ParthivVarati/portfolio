@@ -4,39 +4,33 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ["'Space Grotesk'", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["Fraunces", "ui-serif", "Georgia", "serif"],
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
         body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["'Space Mono'", "ui-monospace", "monospace"]
+        mono: ["'JetBrains Mono'", "ui-monospace", "monospace"]
       },
       colors: {
-        // Sakana "paper" palette
-        paper: "#F2ECE0",
-        paper2: "#EBE2D2",
-        card: "#FBF8F1",
-        ink: "#1B1A17",
-        inksoft: "#5E574C",
-        line: "#DCD2C0",
-        coral: "#FF4D2E",
-        coraldeep: "#E03A1C",
-        teal: "#0E8C7F",
-        ocean: "#0A1A2A",
-        // legacy aliases (kept so any stray reference still resolves)
-        primary: "#FF4D2E",
-        accent: "#0E8C7F",
-        bg: "#F2ECE0"
+        // Dark CRT "terminal" palette (result.dev, dark)
+        white: "#060907", // page background (dark)
+        paper: "#0D120F", // elevated surface
+        ink: "#E8EEE8", // primary text (light)
+        sub: "#8A958A", // muted text
+        line: "rgba(150,180,150,0.14)",
+        green: "#4ADE80",
+        greendk: "#2BBA63",
+        greentint: "rgba(74,222,128,0.12)",
+        // legacy aliases
+        primary: "#4ADE80",
+        accent: "#4ADE80",
+        bg: "#060907",
+        card: "#0D120F"
+      },
+      letterSpacing: {
+        tightest: "-0.045em"
       },
       boxShadow: {
-        card: "0 1px 0 rgba(27,26,23,0.03), 0 18px 40px -28px rgba(27,26,23,0.45)",
-        lift: "0 26px 50px -28px rgba(27,26,23,0.5)",
-        coral: "0 14px 34px -12px rgba(255,77,46,0.55)",
-        inset: "inset 0 0 0 1px rgba(27,26,23,0.08)"
+        glow: "0 0 28px rgba(74,222,128,0.22)"
       },
       keyframes: {
-        floaty: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-10px)" }
-        },
         marquee: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" }
@@ -47,8 +41,7 @@ export default {
         }
       },
       animation: {
-        floaty: "floaty 7s ease-in-out infinite",
-        marquee: "marquee 26s linear infinite",
+        marquee: "marquee 28s linear infinite",
         blink: "blink 1.05s step-end infinite"
       }
     }

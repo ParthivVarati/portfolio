@@ -24,11 +24,7 @@ const experiences = [
         text: "Developed AI & vision solutions, including multi-API agents and PPE detection models (YOLOv8/11n + SAM 2)."
       }
     ],
-    skills: [
-      "Python", "REST APIs", "LangChain", "LangGraph", "RAG", "Letta",
-      "RabbitMQ", "Celery", "YOLOv8", "YOLO11n", "SAM 2", "PyTorch",
-      "OpenCV", "React", "Tailwind CSS", "Docker", "Git"
-    ]
+    skills: ["Python", "LangChain", "LangGraph", "RAG", "Letta", "RabbitMQ", "Celery", "YOLOv8", "SAM 2", "PyTorch", "Docker"]
   },
   {
     id: 1,
@@ -51,108 +47,79 @@ export default function Experience() {
   const data = experiences[active];
 
   return (
-    <section id="experience" className="py-24 sm:py-28">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading
-          index="01"
-          title="Experience"
-          subtitle="Where I've shipped, learned, and broken things on purpose."
-        />
+    <section id="experience" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 sm:py-32">
+      <SectionHeading index="02" title="Experience" subtitle="Where I've shipped, learned, and broken things on purpose." />
 
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[5fr_7fr] lg:gap-14">
-          {/* Company selector — large type */}
-          <div className="flex flex-col">
-            {experiences.map((exp, idx) => {
-              const on = active === idx;
-              return (
-                <button
-                  key={exp.id}
-                  onClick={() => setActive(idx)}
-                  className="group border-b border-line py-6 text-left"
-                >
-                  <div className="flex items-center gap-4">
-                    <span
-                      className={`h-2.5 w-2.5 shrink-0 rounded-full transition-colors ${
-                        on ? "bg-coral" : "bg-ink/20 group-hover:bg-ink/40"
-                      }`}
-                    />
-                    <h3
-                      className={`headline text-3xl transition-colors sm:text-4xl ${
-                        on ? "text-ink" : "text-ink/35 group-hover:text-ink/70"
-                      }`}
-                    >
-                      {exp.company}
-                    </h3>
-                  </div>
-                  <div className="mt-2 flex items-center gap-3 pl-6 font-mono text-xs text-inksoft">
-                    <span>{exp.role}</span>
-                    <span className="text-line">/</span>
-                    <span>{exp.duration}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Detail */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={data.id}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -18 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="paper-card p-7 sm:p-9"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h4 className="font-display text-2xl font-bold">
-                    {data.role} <span className="text-coral">@ {data.company}</span>
-                  </h4>
-                  <div className="mt-3 flex flex-wrap gap-4 text-sm text-inksoft">
-                    <span className="flex items-center gap-1.5">
-                      <CalendarDays size={15} /> {data.duration}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <MapPin size={15} /> {data.location}
-                    </span>
-                  </div>
-                </div>
-                <span
-                  className={`shrink-0 rounded-full border px-3.5 py-1 text-xs font-medium ${
-                    data.status === "Current"
-                      ? "border-teal bg-teal/10 text-teal"
-                      : "border-line text-inksoft"
-                  }`}
-                >
-                  {data.status}
-                </span>
-              </div>
-
-              <ul className="mt-7 space-y-3.5">
-                {data.points.map((p, i) => (
-                  <li key={i} className="flex gap-3 text-[15px] text-ink/85">
-                    <ArrowRight size={17} className="mt-1 shrink-0 text-coral" />
-                    <span>
-                      {p.text}
-                      {p.highlight && (
-                        <span className="font-semibold text-teal">{p.highlight}</span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-7 flex flex-wrap gap-2">
-                {data.skills.map((skill) => (
-                  <span key={skill} className="chip">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr]">
+        {/* company list */}
+        <div className="border-t border-line lg:border-t-0 lg:border-r">
+          {experiences.map((exp, idx) => {
+            const on = active === idx;
+            return (
+              <button
+                key={exp.id}
+                onClick={() => setActive(idx)}
+                className={`relative block w-full border-b border-line px-2 py-6 text-left transition-colors lg:pr-8 ${
+                  on ? "" : "opacity-50 hover:opacity-90"
+                }`}
+              >
+                {on && <span className="absolute left-0 top-0 h-full w-[3px] bg-green" />}
+                <span className="mono text-xs text-sub">0{idx + 1}</span>
+                <span className="mt-1 block text-2xl font-bold tracking-tightest">{exp.company}</span>
+                <span className="mono mt-1 block text-xs text-sub">{exp.role}</span>
+              </button>
+            );
+          })}
         </div>
+
+        {/* detail */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={data.id}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -14 }}
+            transition={{ duration: 0.3 }}
+            className="border-t border-line px-2 py-8 lg:border-t-0 lg:px-10"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h3 className="text-2xl font-bold tracking-tightest sm:text-3xl">
+                  {data.role} <span className="text-green">@ {data.company}</span>
+                </h3>
+                <div className="mono mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-sub">
+                  <span className="flex items-center gap-1.5"><CalendarDays size={13} /> {data.duration}</span>
+                  <span className="flex items-center gap-1.5"><MapPin size={13} /> {data.location}</span>
+                </div>
+              </div>
+              <span
+                className={`label px-3 py-1 ${
+                  data.status === "Current" ? "bg-greentint text-green" : "border border-line text-sub"
+                }`}
+              >
+                {data.status}
+              </span>
+            </div>
+
+            <ul className="mt-8 space-y-4">
+              {data.points.map((p, i) => (
+                <li key={i} className="flex gap-3 text-[15px] leading-relaxed text-ink/85">
+                  <ArrowRight size={17} className="mt-1 shrink-0 text-green" />
+                  <span>
+                    {p.text}
+                    {p.highlight && <span className="font-semibold text-green">{p.highlight}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap gap-2">
+              {data.skills.map((s) => (
+                <span key={s} className="tag">{s}</span>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

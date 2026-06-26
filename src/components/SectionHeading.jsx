@@ -2,32 +2,41 @@ import { motion } from "framer-motion";
 
 export default function SectionHeading({ index, title, subtitle }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.6 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-14"
-    >
-      <div className="flex items-end justify-between gap-6 border-b border-line pb-6">
-        <div className="flex items-end gap-5">
-          <span className="numeral-outline hidden text-6xl leading-none sm:block sm:text-7xl">
-            {index}
-          </span>
-          <div>
-            <span className="eyebrow text-[11px] text-coral">Section {index}</span>
-            <h2 className="headline mt-2 text-4xl sm:text-5xl">{title}</h2>
-          </div>
-        </div>
-        {subtitle && (
-          <p className="hidden max-w-xs text-right text-sm text-inksoft md:block">
-            {subtitle}
-          </p>
-        )}
+    <div className="mb-14 border-t border-ink pt-5">
+      <div className="flex items-baseline gap-4">
+        <motion.span
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="mono text-sm font-medium text-green"
+        >
+          ({index})
+        </motion.span>
+        {/* masked slide-up reveal */}
+        <span className="block overflow-hidden">
+          <motion.h2
+            initial={{ y: "110%" }}
+            whileInView={{ y: "0%" }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={{ duration: 0.7, ease: [0.2, 0, 0, 1] }}
+            className="display text-4xl sm:text-5xl"
+          >
+            {title}
+          </motion.h2>
+        </span>
       </div>
       {subtitle && (
-        <p className="mt-4 max-w-md text-sm text-inksoft md:hidden">{subtitle}</p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-4 max-w-xl text-base text-sub"
+        >
+          {subtitle}
+        </motion.p>
       )}
-    </motion.div>
+    </div>
   );
 }
