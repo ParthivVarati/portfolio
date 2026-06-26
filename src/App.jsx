@@ -52,28 +52,6 @@ export default function App() {
     };
   }, [booted]);
 
-  // result.dev-style smooth momentum scroll
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true
-    });
-    let raf;
-    const loop = (time) => {
-      lenis.raf(time);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    window.__lenis = lenis;
-    return () => {
-      cancelAnimationFrame(raf);
-      lenis.destroy();
-      window.__lenis = null;
-    };
-  }, []);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
