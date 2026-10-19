@@ -575,7 +575,7 @@ export default function PreviewPane({ view, arg, tabs, busy, onRun, onType, guid
   const activeTab = view === "project" ? "projects" : view;
 
   return (
-    <aside className="pane" aria-label="Preview">
+    <aside className="pane" aria-label="Preview" ref={guideRef}>
       <nav className="pane-tabs" aria-label="Sections">
         {tabs.map((tab) => (
           <button
@@ -602,10 +602,6 @@ export default function PreviewPane({ view, arg, tabs, busy, onRun, onType, guid
             <PreviewView view={view} arg={arg} onRun={onRun} onType={onType} />
           </motion.div>
         </AnimatePresence>
-      </div>
-
-      <div className="pane-guide" ref={guideRef}>
-        <span className="pane-guide-label">char · guide</span>
       </div>
     </aside>
   );
