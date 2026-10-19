@@ -113,30 +113,39 @@ export default function MacTerminal() {
     ctx.font = font;
     const textW = ctx.measureText(typed).width;
 
-    // Sit on the caret: Char just right of typed text, vertically centered on the prompt row
+    // Sit on the caret: Char just right of typed text, vertically centered on the prompt row.
+    // Offset = half of Char's stage (104px laptop, 72px phone) plus the dock gap.
+    const half = wide ? 54 : 42;
     const caretX = ir.left - sr.left + textW;
     const left = Math.min(Math.max(8, caretX - 8), sr.width - 180);
     const top = Math.max(
       8,
-      Math.min(sr.height - 180, rr.top - sr.top + rr.height / 2 - 78),
+      Math.min(sr.height - half * 2 - 8, rr.top - sr.top + rr.height / 2 - half),
     );
 
     return { left, top };
-  }, []);
+  }, [wide]);
 
   const measureWaitAnchor = useCallback(() => {
     const stageEl = stageRef.current;
     if (!stageEl) return null;
     const sr = stageEl.getBoundingClientRect();
 
-    // Char lives in a guide strip (pane bottom when wide, screen bottom when narrow)
-    const guide = guideRef.current;
-    if (guide) {
-      const gr = guide.getBoundingClientRect();
+    // Phones: Char floats bottom-right (72px), chips beside him
+    if (!wide) {
+      const w = Math.min(sr.width - 16, 380);
+      return { left: sr.width - w - 8, top: sr.height - 80, width: w };
+    }
+
+    // Laptop: Char floats in the preview pane's bottom-right corner (96px), no strip
+    const pane = guideRef.current;
+    if (pane) {
+      const pr = pane.getBoundingClientRect();
+      const w = Math.min(pr.width - 28, 470);
       return {
-        left: gr.left - sr.left + 10,
-        top: gr.top - sr.top + Math.max(0, (gr.height - 156) / 2),
-        width: gr.width - 24,
+        left: pr.right - sr.left - w - 14,
+        top: pr.bottom - sr.top - 96 - 14,
+        width: w,
       };
     }
 
@@ -593,8 +602,6 @@ export default function MacTerminal() {
             </nav>
           )}
 
-          {!wide && <div className="pane-guide is-bottom" ref={guideRef} />}
-
           {wide && (
             <PreviewPane
               view={pane.view}
@@ -617,6 +624,7 @@ export default function MacTerminal() {
             breathTick={breathTick}
             anchor={anchor}
             layout="row"
+            compact
             onSuggest={runSuggested}
           />
         </div>

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 
 // three.js + the model load after first paint, so the terminal shows instantly
 const LiveCharizard = lazy(() => import("./LiveCharizard"));
@@ -92,6 +92,33 @@ function FireBreath({ on, tick }) {
   );
 }
 
+/** Types `text` out like speech; restarts whenever the text changes. */
+function useSpeech(text, speed = 24) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    setCount(0);
+    if (!text) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setCount(text.length);
+      return undefined;
+    }
+    let i = 0;
+    let id = 0;
+    const step = () => {
+      i += 1;
+      setCount(i);
+      if (i >= text.length) return;
+      // a beat after punctuation so it reads like speech
+      const ch = text[i - 1];
+      const pause = ".?!".includes(ch) ? 260 : ",—".includes(ch) ? 120 : 0;
+      id = window.setTimeout(step, speed + pause);
+    };
+    id = window.setTimeout(step, 180);
+    return () => window.clearTimeout(id);
+  }, [text, speed]);
+  return { shown: text.slice(0, count), talking: count < (text?.length || 0) };
+}
+
 export default function GuideAvatar({
   mood = "idle",
   thought = "",
@@ -102,9 +129,23 @@ export default function GuideAvatar({
   breathTick = 0,
   anchor = null,
   layout = "column",
+  compact = false,
   onSuggest,
 }) {
   const showHints = pose === "wait" && hints.length > 0 && !breathing;
+
+  // The bubble stays up and Char "speaks" each new line; tapping him hides it,
+  // and his next line brings it back.
+  const [open, setOpen] = useState(true);
+  useEffect(() => {
+    setOpen(true);
+  }, [thought]);
+
+  // Busy statuses end in "…" — drop it, the animated dots replace it
+  const line = busy ? (thought || "on it").replace(/…$/, "") : thought;
+  const { shown, talking } = useSpeech(line);
+  const showThought = Boolean(line) && pose === "wait" && open;
+  const liveMood = talking && !busy ? "talk" : mood;
 
   const style = anchor
     ? {
@@ -121,8 +162,10 @@ export default function GuideAvatar({
       className={[
         "buddy-dock",
         `pose-${pose}`,
-        `mood-${mood}`,
+        `mood-${liveMood}`,
+        talking ? "is-talking" : "",
         `layout-${layout}`,
+        compact ? "is-compact" : "",
         busy ? "is-busy" : "",
         breathing ? "is-breathing" : "",
       ]
@@ -132,9 +175,18 @@ export default function GuideAvatar({
       aria-label="Guide"
     >
       <div className="buddy-talk">
-        {thought && pose === "wait" ? (
-          <p className="buddy-thought" aria-live="polite">
-            {thought}
+        {showThought ? (
+          <p className={`buddy-thought ${busy ? "is-status" : ""}`}>
+            {/* full line reserves the bubble's size; the typed line sits on top */}
+            <span className="speech-ghost" aria-hidden="true">{line}</span>
+            <span className="speech-live" aria-hidden="true">
+              {shown}
+              {talking && <i className="speech-caret" />}
+              {busy && !talking && (
+                <span className="speech-dots"><i /><i /><i /></span>
+              )}
+            </span>
+            <span className="sr-only" aria-live="polite">{line}</span>
           </p>
         ) : null}
 
@@ -155,11 +207,16 @@ export default function GuideAvatar({
         )}
       </div>
 
-      <div className="buddy-stage">
+      <div
+        className="buddy-stage"
+        onClick={compact ? () => setOpen((v) => !v) : undefined}
+        role={compact ? "button" : undefined}
+        aria-label={compact ? (open ? "Hide Char's message" : "Show Char's message") : undefined}
+      >
         <span className="buddy-glow" aria-hidden="true" />
         <Suspense fallback={<div className="buddy-canvas"><div className="buddy-fallback" /></div>}>
           <LiveCharizard
-            mood={mood}
+            mood={liveMood}
             busy={busy || breathing}
             breathing={breathing}
             facing={pose}

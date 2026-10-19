@@ -424,10 +424,11 @@ a { color: inherit; text-decoration: none; }
 
 .mac-stage.is-stacked {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) 140px;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
-.is-stacked .mac-body { padding-bottom: 16px; }
+/* room under the last line so the floating Char never covers it */
+.is-stacked .mac-body { padding-bottom: 170px; }
 .is-stacked .mac-composer { padding-bottom: 24px; }
 
 .mac-prompt-stack {
@@ -1046,7 +1047,7 @@ a { color: inherit; text-decoration: none; }
 .pane {
   position: relative;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) 176px;
+  grid-template-rows: auto minmax(0, 1fr);
   min-height: 0;
   border-left: 1px solid var(--line);
   background: var(--pane-bg);
@@ -1082,27 +1083,9 @@ a { color: inherit; text-decoration: none; }
 .pane-scroll {
   min-height: 0;
   overflow-y: auto;
-  padding: 26px 28px 32px;
+  padding: 26px 28px 210px; /* room for the floating Char + his bubble */
   scrollbar-width: thin;
   scrollbar-color: #2c2c2e transparent;
-}
-
-.pane-guide {
-  position: relative;
-  border-top: 1px solid var(--line);
-  background:
-    radial-gradient(60% 120% at 12% 100%, rgba(255, 140, 50, 0.1), transparent 70%),
-    #0d0d0f;
-}
-
-.pane-guide-label {
-  position: absolute;
-  right: 14px;
-  bottom: 10px;
-  color: #3a3a3c;
-  font: 500 10px/1 var(--mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 /* ─── Preview views ─── */
@@ -1821,4 +1804,135 @@ a { color: inherit; text-decoration: none; }
   .buddy-dock.layout-row.pose-wait .buddy-thought { padding: 8px 11px; font-size: 12px; line-height: 1.4; }
   .buddy-dock.layout-row.pose-wait .buddy-hint { min-height: 36px; padding: 0 14px; font-size: 13px; }
   .buddy-dock.layout-row.pose-wait .buddy-stage { width: 104px; height: 104px; }
+}
+
+/* ─── Char, smaller footprint ─── */
+
+/* laptop: same floating companion as phones, a little bigger (96px) */
+.mac-stage.is-split .buddy-dock.layout-row .buddy-stage { width: 96px; height: 96px; }
+.mac-stage.is-split .buddy-dock.layout-row.is-compact.pose-wait { height: 96px; }
+.mac-stage.is-split .buddy-dock.layout-row.is-compact.pose-wait .buddy-thought { max-width: min(330px, 100%); font-size: 13px; }
+
+/* phones: a 72px companion floating bottom-right, chips beside him,
+   the speech bubble pops up above as a toast */
+.buddy-dock.layout-row.is-compact .buddy-stage {
+  width: 72px;
+  height: 72px;
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 72px;
+  gap: 4px;
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait .buddy-stage {
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait .buddy-talk {
+  flex: 1;
+  min-width: 0;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait .buddy-hints {
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.buddy-dock.layout-row.is-compact .buddy-hint {
+  min-height: 34px;
+  padding: 0 13px;
+  font-size: 12.5px;
+  background: #23180c;
+  border-color: rgba(255, 176, 90, 0.55);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait .buddy-thought {
+  position: absolute;
+  right: 10px;
+  bottom: calc(100% + 6px);
+  max-width: min(290px, 100%);
+  padding: 9px 12px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  background: rgb(28, 28, 30);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+  animation: toast-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.buddy-dock.layout-row.is-compact.pose-wait .buddy-thought::before {
+  left: auto;
+  right: 26px;
+  top: auto;
+  bottom: -6px;
+  margin-top: 0;
+  transform: rotate(-45deg);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ─── Char speaks: typed line over a ghost that reserves the bubble size ─── */
+.buddy-thought { display: grid; }
+.buddy-thought > .speech-ghost,
+.buddy-thought > .speech-live { grid-area: 1 / 1; }
+.speech-ghost { visibility: hidden; }
+
+.speech-caret {
+  display: inline-block;
+  width: 6px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  border-radius: 1px;
+  background: var(--accent);
+  animation: speech-caret 0.7s steps(1) infinite;
+}
+
+.speech-dots { display: inline-flex; gap: 3px; margin-left: 6px; vertical-align: middle; }
+
+.speech-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: speech-dot 0.9s ease-in-out infinite;
+}
+
+.speech-dots i:nth-child(2) { animation-delay: 0.15s; }
+.speech-dots i:nth-child(3) { animation-delay: 0.3s; }
+
+.buddy-thought.is-status { color: #c7c7cc; }
+
+/* a little bob while he talks */
+.buddy-dock.is-talking .buddy-stage { animation: char-talk 0.32s ease-in-out infinite; }
+
+@keyframes speech-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes speech-dot {
+  0%, 100% { transform: translateY(0); opacity: 0.45; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+
+@keyframes char-talk {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .speech-caret, .speech-dots i, .buddy-dock.is-talking .buddy-stage { animation: none; }
 }
