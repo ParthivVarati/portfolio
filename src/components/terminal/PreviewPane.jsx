@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   architectures,
@@ -12,8 +12,9 @@ import {
   projects,
   skillGroups,
 } from "../../data/portfolio";
-import { PROCESSES, shortHash } from "../../lib/terminalCommands";
-import { SkillsGlobe } from "../SkillsGlobe";
+import { PROCESSES, TLDR, shortHash } from "../../lib/terminalCommands";
+
+const SkillsGlobe = lazy(() => import("../SkillsGlobe").then((m) => ({ default: m.SkillsGlobe })));
 import { GlobeErrorBoundary } from "../GlobeErrorBoundary";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -89,6 +90,44 @@ function StartView({ onType }) {
           </Item>
         ))}
       </div>
+    </Stagger>
+  );
+}
+
+/* ─── tldr: the 60-second recruiter view ─── */
+function TldrView({ onRun }) {
+  const picks = TLDR.projects.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
+  return (
+    <Stagger className="pv-view">
+      <Item><Eyebrow>tldr · 60 seconds</Eyebrow></Item>
+      <Item as="h2" className="pv-name">{profile.fullName}</Item>
+      <Item as="p" className="pv-lede">{TLDR.oneLiner}</Item>
+      <Item className="pv-actions">
+        <a className="pv-cta" href={links.emailHref}>Email me</a>
+        <a className="pv-cta is-ghost" href={links.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+        <a className="pv-cta is-ghost" href={links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      </Item>
+      <Item><Eyebrow>What I've done</Eyebrow></Item>
+      <ol className="pv-wins">
+        {TLDR.wins.map((w, i) => (
+          <Item as="li" key={w.slice(0, 24)}>
+            <span>{String(i + 1).padStart(2, "0")}</span>
+            <p>{w}</p>
+          </Item>
+        ))}
+      </ol>
+      <Item><Eyebrow>Key projects</Eyebrow></Item>
+      <Item className="pv-archive">
+        {picks.map((p) => (
+          <button key={p.id} type="button" onClick={() => onRun(`open ${p.slug}`)}>
+            <b>{p.title}</b>
+            <span>{p.status} →</span>
+          </button>
+        ))}
+      </Item>
+      <Item><Eyebrow>Stack</Eyebrow></Item>
+      <Item><Chips items={TLDR.stack} tone="accent" /></Item>
+      <Item as="p" className="pv-role">Before: {TLDR.previously}</Item>
     </Stagger>
   );
 }
@@ -437,12 +476,14 @@ function SkillsView() {
       </Item>
       <Item className="pv-globe">
         <GlobeErrorBoundary>
-          <SkillsGlobe
-            items={items}
-            tint="#ffb454"
-            className="pv-globe-canvas"
-            labelClassName="pv-globe-label"
-          />
+          <Suspense fallback={<div className="pv-globe-canvas pv-globe-loading">spinning up the globe…</div>}>
+            <SkillsGlobe
+              items={items}
+              tint="#ffb454"
+              className="pv-globe-canvas"
+              labelClassName="pv-globe-label"
+            />
+          </Suspense>
         </GlobeErrorBoundary>
       </Item>
       <Item className="pv-infra">
@@ -506,6 +547,8 @@ function ContactView() {
 /* ─── Router ─── */
 export function PreviewView({ view, arg, onRun, onType }) {
   switch (view) {
+    case "tldr":
+      return <TldrView onRun={onRun} />;
     case "about":
       return <AboutView />;
     case "experience":

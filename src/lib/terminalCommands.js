@@ -26,6 +26,7 @@ export const EXPLORE_FLOW = [
 /** Preview-pane tabs (run directly, no typing) */
 export const PANE_TABS = [
   { view: "start", cmd: "help", label: "README.md" },
+  { view: "tldr", cmd: "tldr", label: "tldr" },
   { view: "about", cmd: "curl parthivvarati.me/whoami", label: "whoami.json" },
   { view: "experience", cmd: "git log", label: "git log" },
   { view: "projects", cmd: "ls projects/", label: "projects/" },
@@ -35,7 +36,34 @@ export const PANE_TABS = [
   { view: "contact", cmd: "contact", label: "contact.vcf" },
 ];
 
+/** Phone section bar — one tap, no typing */
+export const MOBILE_NAV = [
+  { view: "tldr", cmd: "tldr", label: "⚡ 60s summary", hot: true },
+  { view: "about", cmd: "curl parthivvarati.me/whoami", label: "whoami" },
+  { view: "experience", cmd: "git log", label: "experience" },
+  { view: "projects", cmd: "ls projects/", label: "projects" },
+  { view: "htop", cmd: "htop", label: "htop" },
+  { view: "architecture", cmd: "arch", label: "arch" },
+  { view: "skills", cmd: "skills --3d", label: "skills" },
+  { view: "contact", cmd: "contact", label: "contact" },
+];
+
+/** The 60-second recruiter summary — shared by the terminal and the preview */
+export const TLDR = {
+  oneLiner: `${profile.title} at ${profile.company}, building multi-tenant AI voice platforms, backend services and AWS infrastructure.`,
+  wins: [
+    `Core contributor to Vriksha Voice — ${metrics.calls.value} calls, ${metrics.campaigns.value} campaigns, ${metrics.clients.value} business customers, ${metrics.latency.value} median voice latency.`,
+    "Designed the provider-agnostic voice layer: STT, TTS, telephony and the in-house Signal Box engine behind one interface.",
+    `Built a Thompson Sampling ROI experimentation engine and SQS-backed campaign orchestration for ${metrics.concurrent.value} concurrent calls.`,
+    "Designs, deploys and maintains the AWS stack (ECS, DynamoDB, ElastiCache, PostgreSQL, SQS) with Terraform and GitHub Actions.",
+  ],
+  projects: ["vriksha-voice", "signal-box", "myrush", "agentic-hiring"],
+  stack: ["Java", "Spring Boot", "Python", "AWS", "Terraform", "Docker", "PostgreSQL", "RAG / LLMs"],
+  previously: "AI Engineer at Nimoy AI (Sep 2025 — Mar 2026): RAG pipelines and LLM orchestration.",
+};
+
 const COMPLETIONS = [
+  "tldr",
   "ls",
   "help",
   "curl parthivvarati.me/whoami",
@@ -143,6 +171,7 @@ export function resolveCommand(raw) {
   if (key === "resume" || key === "cv" || key === "open resume") return { id: "resume" };
   if (key === "ls" || key === "ls -la" || key === "ls ~" || key === "ll") return { id: "ls" };
   if (["help", "man", "?", "readme", "cat readme.md"].includes(key)) return { id: "help" };
+  if (["tldr", "tl;dr", "tldr parthiv", "summary", "60s", "recruiter"].includes(key)) return { id: "tldr" };
 
   if (
     key === "about" ||
@@ -277,6 +306,7 @@ export function runCommand(raw) {
         lines: [
           L("COMMANDS", "header"),
           ...[
+            ["tldr", "the 60-second summary"],
             ["curl parthivvarati.me/whoami", "profile as JSON"],
             ["git log", "experience, one commit per role"],
             ["ls projects/", "projects · then open <name>"],
@@ -293,6 +323,25 @@ export function runCommand(raw) {
           L("  clear · tab completes · ↑↓ history", "muted"),
         ],
       };
+
+    case "tldr": {
+      const tp = TLDR.projects.map((slug) => projects.find((p) => p.slug === slug)).filter(Boolean);
+      return {
+        id,
+        view: view("tldr"),
+        lines: [
+          L("TL;DR — 60 seconds", "header"),
+          L(TLDR.oneLiner, "title"),
+          blank(),
+          ...TLDR.wins.map((w) => P(t("  ✔ ", "success"), t(w, "text"))),
+          blank(),
+          P(t("projects  ", "label-inline"), ...tp.flatMap((p, i) => [c(p.slug, `open ${p.slug}`), t(i < tp.length - 1 ? " · " : "", "muted")])),
+          P(t("stack     ", "label-inline"), t(TLDR.stack.join(" · "), "yellow")),
+          P(t("before    ", "label-inline"), t(TLDR.previously, "muted")),
+          P(t("reach     ", "label-inline"), a(links.email, links.emailHref), t(" · ", "muted"), a("résumé ↗", links.resume)),
+        ],
+      };
+    }
 
     case "about":
       return {
@@ -525,7 +574,7 @@ export function liveGuide(typed, { stage = "greet", seen = [], busy = false, sta
   if (stage === "greet") {
     return {
       mood: "talk",
-      thought: `Hey, I'm Char, ${profile.shortName}'s pet. That card in the terminal is the short version. Want a tour? Click ls — I'll type it.`,
+      thought: `Hey, I'm Char, ${profile.shortName}'s pet. Want the tour? Tap ls — I'll type it for you.`,
       hints: [{ cmd: "ls", label: "ls" }],
     };
   }

@@ -1,4 +1,7 @@
-import LiveCharizard from "./LiveCharizard";
+import { Suspense, lazy } from "react";
+
+// three.js + the model load after first paint, so the terminal shows instantly
+const LiveCharizard = lazy(() => import("./LiveCharizard"));
 
 /**
  * Char slides to the caret while typing (fire from snout),
@@ -154,12 +157,14 @@ export default function GuideAvatar({
 
       <div className="buddy-stage">
         <span className="buddy-glow" aria-hidden="true" />
-        <LiveCharizard
-          mood={mood}
-          busy={busy || breathing}
-          breathing={breathing}
-          facing={pose}
-        />
+        <Suspense fallback={<div className="buddy-canvas"><div className="buddy-fallback" /></div>}>
+          <LiveCharizard
+            mood={mood}
+            busy={busy || breathing}
+            breathing={breathing}
+            facing={pose}
+          />
+        </Suspense>
         <FireBreath on={breathing} tick={breathTick} />
       </div>
     </aside>

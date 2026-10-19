@@ -71,6 +71,12 @@ export default function WelcomeCard({ onRun }) {
         ))}
       </dl>
 
+      <button type="button" className="welcome-tldr" onClick={() => onRun?.("tldr")}>
+        <span>⚡</span>
+        <b>In a hurry? Get the 60-second summary</b>
+        <i>run tldr →</i>
+      </button>
+
       <div className="welcome-links">
         {LINKS.map((l) => (
           <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer">

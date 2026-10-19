@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { links, profile } from "../../data/portfolio";
 import {
   EXPLORE_FLOW,
+  MOBILE_NAV,
   PANE_TABS,
   liveGuide,
   runCommand,
@@ -50,6 +51,9 @@ function useWide() {
   }, []);
   return wide;
 }
+
+/** Touch devices: never pop the keyboard unless the visitor taps the prompt */
+const isTouch = () => window.matchMedia("(pointer: coarse)").matches;
 
 /** Group lines into Warp-style blocks: each prompt line opens a block */
 function toBlocks(lines) {
@@ -161,14 +165,33 @@ export default function MacTerminal() {
     return moodOverride && !busy ? { ...g, mood: moodOverride } : g;
   }, [value, stage, seen, busy, status, moodOverride]);
 
+  // Leave the welcome card in view on first load; follow output after that.
+  // Narrow screens pin the newest block's header to the top so a result reads
+  // from its start (the inline preview is tall); wide screens tail the output.
   useEffect(() => {
-    // Leave the welcome card in view on first load; follow output after that
-    if (!bodyRef.current || lines.length <= 2) return;
-    bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-  }, [lines, value]);
+    const body = bodyRef.current;
+    if (!body || lines.length <= 2) return;
+    if (!wide) {
+      const blocksEls = body.querySelectorAll(".blk");
+      const last = blocksEls[blocksEls.length - 1];
+      if (last) {
+        const top = body.scrollTop + last.getBoundingClientRect().top - body.getBoundingClientRect().top - 6;
+        body.scrollTo({ top, behavior: "smooth" });
+        return;
+      }
+    }
+    body.scrollTop = body.scrollHeight;
+  }, [lines.length, wide]);
 
   useEffect(() => {
-    const t = window.setTimeout(() => inputRef.current?.focus(), 220);
+    if (!value || !bodyRef.current) return;
+    bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+  }, [value]);
+
+  useEffect(() => {
+    if (isTouch()) return undefined;
+    // preventScroll keeps the welcome card in view instead of jumping to the prompt
+    const t = window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 220);
     return () => window.clearTimeout(t);
   }, []);
 
@@ -189,7 +212,7 @@ export default function MacTerminal() {
     const start = measurePromptAnchor("");
     if (start) setAnchor(start);
     setCharPose("prompt");
-    await sleep(700, signal);
+    await sleep(wide ? 700 : 420, signal);
 
     // Remeasure after the slide lands
     const landed = measurePromptAnchor("");
@@ -205,23 +228,27 @@ export default function MacTerminal() {
       setBreathTick((n) => n + 1);
       const next = measurePromptAnchor(typed);
       if (next) setAnchor(next);
-      await sleep(command.length > 16 ? 30 + Math.random() * 22 : 48 + Math.random() * 36, signal);
+      const base = command.length > 16 ? 30 + Math.random() * 22 : 48 + Math.random() * 36;
+      await sleep(wide ? base : base * 0.55, signal);
     }
 
     setBreathing(false);
     setStatus("enter…");
-    await sleep(240, signal);
+    await sleep(wide ? 240 : 140, signal);
     const wait = measureWaitAnchor();
     if (wait) setAnchor(wait);
     setCharPose("wait");
     setStatus("watching output…");
-    await sleep(300, signal);
-  }, [measurePromptAnchor, measureWaitAnchor]);
+    await sleep(wide ? 300 : 120, signal);
+  }, [measurePromptAnchor, measureWaitAnchor, wide]);
 
   /** Print one command's result; returns the resolved id */
   const printResult = useCallback(
     async (result) => {
-      await streamLines(result.lines, append);
+      // Phones: the rich card replaces the text dump (the README card is the
+      // exception — the welcome card already covers it, so keep ls/help text)
+      const cardOnly = !wide && result.view && result.view.view !== "start";
+      if (!cardOnly) await streamLines(result.lines, append);
       if (result.view) {
         setPane({ view: result.view.view, arg: result.view.arg ?? null });
         append([result.view]);
@@ -229,7 +256,7 @@ export default function MacTerminal() {
       setMoodOverride(result.mood || null);
       return result.id;
     },
-    [append],
+    [append, wide],
   );
 
   const markSeen = useCallback((id) => {
@@ -308,7 +335,7 @@ export default function MacTerminal() {
           setStatus(`running ${cmd}…`);
           const id = await printResult(result);
           markSeen(id);
-          if (key === "ls" && stage === "greet") setStage("choose");
+          if (stage === "greet") setStage(key === "ls" ? "choose" : "explore");
           return;
         }
 
@@ -437,6 +464,7 @@ export default function MacTerminal() {
         );
       }
       // Phones: inline preview. Only the newest skills view mounts a WebGL globe.
+      if (line.view === "start") return null;
       if (line.view === "skills" && index !== lastViewIndex) return null;
       return (
         <div key={index} className="inline-view">
@@ -483,7 +511,7 @@ export default function MacTerminal() {
             className="mac-body"
             ref={bodyRef}
             onClick={(e) => {
-              if (busy || e.target.closest("a, button")) return;
+              if (busy || e.target.closest("a, button") || isTouch()) return;
               if (window.getSelection()?.toString()) return;
               inputRef.current?.focus();
             }}
@@ -545,6 +573,25 @@ export default function MacTerminal() {
               </form>
             </div>
           </div>
+
+          {!wide && (
+            <nav className="mnav" aria-label="Sections">
+              {MOBILE_NAV.map((item) => (
+                <button
+                  key={item.view}
+                  type="button"
+                  className={[
+                    item.view === (pane.view === "project" ? "projects" : pane.view) ? "is-on" : "",
+                    item.hot ? "is-hot" : "",
+                  ].filter(Boolean).join(" ")}
+                  disabled={busy}
+                  onClick={() => runDirect(item.cmd)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          )}
 
           {!wide && <div className="pane-guide is-bottom" ref={guideRef} />}
 
