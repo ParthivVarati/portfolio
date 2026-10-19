@@ -1,4 +1,7 @@
-import LiveCharizard from "./LiveCharizard";
+import { Suspense, lazy } from "react";
+
+// three.js + the model load after first paint, so the terminal shows instantly
+const LiveCharizard = lazy(() => import("./LiveCharizard"));
 
 /**
  * Char slides to the caret while typing (fire from snout),
@@ -98,6 +101,7 @@ export default function GuideAvatar({
   breathing = false,
   breathTick = 0,
   anchor = null,
+  layout = "column",
   onSuggest,
 }) {
   const showHints = pose === "wait" && hints.length > 0 && !breathing;
@@ -108,6 +112,7 @@ export default function GuideAvatar({
         top: `${anchor.top}px`,
         right: "auto",
         bottom: "auto",
+        ...(anchor.width && pose === "wait" ? { width: `${anchor.width}px` } : null),
       }
     : undefined;
 
@@ -117,6 +122,7 @@ export default function GuideAvatar({
         "buddy-dock",
         `pose-${pose}`,
         `mood-${mood}`,
+        `layout-${layout}`,
         busy ? "is-busy" : "",
         breathing ? "is-breathing" : "",
       ]
@@ -125,36 +131,40 @@ export default function GuideAvatar({
       style={style}
       aria-label="Guide"
     >
-      {thought && pose === "wait" ? (
-        <p className="buddy-thought" aria-live="polite">
-          {thought}
-        </p>
-      ) : null}
+      <div className="buddy-talk">
+        {thought && pose === "wait" ? (
+          <p className="buddy-thought" aria-live="polite">
+            {thought}
+          </p>
+        ) : null}
 
-      {showHints && (
-        <div className="buddy-hints" aria-label="Click to auto-type">
-          {hints.map((hint) => (
-            <button
-              key={hint.cmd}
-              type="button"
-              className="buddy-hint"
-              disabled={busy}
-              onClick={() => onSuggest?.(hint.cmd)}
-            >
-              {hint.label}
-            </button>
-          ))}
-        </div>
-      )}
+        {showHints && (
+          <div className="buddy-hints" aria-label="Click to auto-type">
+            {hints.map((hint) => (
+              <button
+                key={hint.cmd}
+                type="button"
+                className="buddy-hint"
+                disabled={busy}
+                onClick={() => onSuggest?.(hint.cmd)}
+              >
+                {hint.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="buddy-stage">
         <span className="buddy-glow" aria-hidden="true" />
-        <LiveCharizard
-          mood={mood}
-          busy={busy || breathing}
-          breathing={breathing}
-          facing={pose}
-        />
+        <Suspense fallback={<div className="buddy-canvas"><div className="buddy-fallback" /></div>}>
+          <LiveCharizard
+            mood={mood}
+            busy={busy || breathing}
+            breathing={breathing}
+            facing={pose}
+          />
+        </Suspense>
         <FireBreath on={breathing} tick={breathTick} />
       </div>
     </aside>

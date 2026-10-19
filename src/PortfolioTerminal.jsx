@@ -3,20 +3,19 @@ import TechSplash from "./components/terminal/TechSplash";
 import MacTerminal from "./components/terminal/MacTerminal";
 
 /**
- * Step 1:
- *   splash (tech flash) → Mac Terminal
- * Splash runs on every fresh load so you can always preview it.
+ * Boot splash (every load). At the burn, the terminal mounts underneath and
+ * the splash's dark cover burns away over it; then the splash unmounts.
  */
 export default function PortfolioTerminal() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [phase, setPhase] = useState("splash"); // splash | reveal | done
 
-  const finishSplash = useCallback(() => {
-    setShowSplash(false);
-  }, []);
+  const onReveal = useCallback(() => setPhase("reveal"), []);
+  const onDone = useCallback(() => setPhase("done"), []);
 
-  return showSplash ? (
-    <TechSplash onDone={finishSplash} />
-  ) : (
-    <MacTerminal />
+  return (
+    <>
+      {phase !== "splash" && <MacTerminal />}
+      {phase !== "done" && <TechSplash onReveal={onReveal} onDone={onDone} />}
+    </>
   );
 }

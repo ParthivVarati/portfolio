@@ -21,11 +21,26 @@ function latLonToVector3(lat, lon, radius) {
   );
 }
 
-function GlobeModel({ category }) {
+// Even spread for an arbitrary list of skills (used when `items` is passed)
+function fibonacciPoint(i, n, radius) {
+  const y = 1 - ((i + 0.5) / n) * 2;
+  const r = Math.sqrt(1 - y * y);
+  const theta = Math.PI * (3 - Math.sqrt(5)) * i;
+  return new THREE.Vector3(Math.cos(theta) * r * radius, y * radius, Math.sin(theta) * r * radius);
+}
+
+function GlobeModel({ category, items, tint, labelClassName }) {
   const globeRef = useRef();
   const labelRefs = useRef([]);
 
   const nodes = useMemo(() => {
+    if (items) {
+      labelRefs.current = [];
+      return items.map((item, i) => {
+        const pos = fibonacciPoint(i, items.length, 1.58);
+        return { name: item.name, pos, normal: pos.clone().normalize(), color: item.color };
+      });
+    }
     const palette = THEME[category] || THEME.tech;
     const filtered = skills.filter((s) => s.category === category);
     labelRefs.current = [];
@@ -33,7 +48,7 @@ function GlobeModel({ category }) {
       const pos = latLonToVector3(skill.lat, skill.lon, 1.58);
       return { name: skill.name, pos, normal: pos.clone().normalize(), color: palette[i % palette.length] };
     });
-  }, [category]);
+  }, [category, items]);
 
   const camDir = useRef(new THREE.Vector3());
   const worldNormal = useRef(new THREE.Vector3());
@@ -59,7 +74,7 @@ function GlobeModel({ category }) {
       {/* faint green core */}
       <mesh>
         <sphereGeometry args={[1.49, 48, 48]} />
-        <meshBasicMaterial color="#22C55E" transparent opacity={0.05} />
+        <meshBasicMaterial color={tint} transparent opacity={0.05} />
       </mesh>
       {/* wireframe shell */}
       <mesh>
@@ -68,7 +83,7 @@ function GlobeModel({ category }) {
       </mesh>
 
       {nodes.map((n, i) => (
-        <group key={`${category}-${i}`} position={n.pos.toArray()}>
+        <group key={`${category ?? "items"}-${n.name}-${i}`} position={n.pos.toArray()}>
           <mesh>
             <sphereGeometry args={[0.1, 16, 16]} />
             <meshBasicMaterial color={n.color} transparent opacity={0.18} />
@@ -80,7 +95,7 @@ function GlobeModel({ category }) {
           <Html position={[0, 0.26, 0]} center distanceFactor={8} zIndexRange={[10, 0]}>
             <span
               ref={(el) => (labelRefs.current[i] = el)}
-              className="whitespace-nowrap text-[11px] font-semibold tracking-tight"
+              className={labelClassName}
               style={{ color: "#FFFFFF", opacity: 0, willChange: "opacity, transform" }}
             >
               {n.name}
@@ -92,12 +107,18 @@ function GlobeModel({ category }) {
   );
 }
 
-export function SkillsGlobe({ category }) {
+export function SkillsGlobe({
+  category,
+  items,
+  tint = "#22C55E",
+  className = "h-[460px] w-full cursor-grab active:cursor-grabbing sm:h-[520px]",
+  labelClassName = "whitespace-nowrap text-[11px] font-semibold tracking-tight",
+}) {
   return (
-    <div className="h-[460px] w-full cursor-grab active:cursor-grabbing sm:h-[520px]">
+    <div className={className}>
       <Canvas camera={{ position: [0, 0, 6], fov: 45 }} dpr={[1, 2]}>
         <ambientLight intensity={0.8} />
-        <GlobeModel category={category} />
+        <GlobeModel category={category} items={items} tint={tint} labelClassName={labelClassName} />
         <OrbitControls enableZoom={false} enablePan={false} rotateSpeed={0.5} />
       </Canvas>
     </div>
